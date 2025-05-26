@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "dev": "webpack serve"
   },
   "repository": {
     "type": "git",
@@ -17,10 +19,6 @@
     "url": "https://github.com/Sekaii22/top-todo/issues"
   },
   "homepage": "https://github.com/Sekaii22/top-todo#readme",
-  "scripts": {
-    "build": "webpack",
-    "dev": "webpack serve"
-  },
   "devDependencies": {
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.3",
