@@ -88,4 +88,9 @@ function reformProject(project) {
     console.log(project);
 }
 
-export { TodoItem, Project, reformTodoItem, reformProject };
+function getProjectFromUUID(projectList, uuid) {
+    let index = projectList.findIndex((proj) => proj.UUID === uuid);
+    return index;
+}
+
+export { TodoItem, Project, reformTodoItem, reformProject, getProjectFromUUID };

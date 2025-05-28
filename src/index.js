@@ -3,8 +3,8 @@ import { TodoItem, Project, reformProject } from "./todo";
 import { updateSidebar } from "./todo-ui";
 
 const sidebarBtn = document.querySelector(".sidebar-btn");
-const content = document.querySelector(".content");
-const sidebar = document.querySelector(".sidebar");
+const content = document.querySelector("#content");
+const sidebar = document.querySelector("#sidebar");
 
 // get from local storage
 let projects = localStorage.getItem("projects");
