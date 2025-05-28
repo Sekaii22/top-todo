@@ -1,12 +1,11 @@
 import "./styles.css";
 
 const sidebarBtn = document.querySelector(".sidebar-btn");
-const body = document.querySelector("body");
-const sidebarHeader = document.querySelector(".sidebar header");
-const sidebarNav = document.querySelector(".sidebar nav");
+const content = document.querySelector(".content");
+const sidebar = document.querySelector(".sidebar");
 
 sidebarBtn.addEventListener("click", () => {
-    body.classList.toggle("collapse-grid");
-    sidebarNav.classList.toggle("collapse");
-    sidebarHeader.classList.toggle("collapse");
+    sidebar.classList.toggle("collapse-sidebar");
+    content.classList.toggle("expand-content"); 
+    // sidebar.classList.toggle("collapse-sidebar");
 });
