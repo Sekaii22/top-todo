@@ -104,6 +104,7 @@ nav ul {
 .main-nav-btn svg {
     margin-right: 6px;
     margin-left: 6px;
+    flex-shrink: 0;
 }
 
 .sub-nav-btn {
