@@ -12,6 +12,12 @@
     color: var(--text-dark-color);
 }
 
+svg {
+    height: auto;
+    width: 28px;
+    fill: var(--text-dark-color);
+}
+
 body {
     min-height: 100vh;
     background-color: var(--main-dark-color);
@@ -45,9 +51,7 @@ body {
     margin-left: 0px;
 }
 
-
 /* Sidebar */
-
 
 .sidebar header {
     font-size: 3rem;
@@ -58,7 +62,8 @@ body {
     font-size: 1.1rem;
     padding: 10px 0 50px 0;
     height: 80%;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-top: 1px solid var(--outline-dark-color);
     border-bottom: 1px solid var(--outline-dark-color);
 }
@@ -83,17 +88,29 @@ nav ul {
 }
 
 .nav-btn:hover {
-    font-size: 1.2rem;
+    scale: 1.05;
     background-color: hsl(from var(--sidebar-dark-color) h s 30%);
+}
+
+.center-logo-btn {
+    display: inline-flex;
+    align-items: center;
 }
 
 .main-nav-btn {
     font-weight: bold;
 }
 
-.sub-nav-btn {
-    padding-left: 30px;
+.main-nav-btn svg {
+    margin-right: 6px;
+    margin-left: 6px;
 }
+
+.sub-nav-btn {
+    padding-left: 66px;
+}
+
+/* Content */
 
 .sidebar-btn {
     background-color: transparent;
@@ -108,11 +125,7 @@ nav ul {
 
 .sidebar-btn svg {
     width: 34px;
-    height: auto;
-    fill: var(--text-dark-color);
 }
-
-/* Content */
 
 .content-header {
     height: 90px;
