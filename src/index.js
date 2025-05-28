@@ -1,6 +1,6 @@
 import "./styles.css";
 import { TodoItem, Project, reformProject } from "./todo";
-import { updateSidebar } from "./todo-ui";
+import { updateSidebar, renderProjectCatelogPage } from "./todo-ui";
 
 const sidebarBtn = document.querySelector(".sidebar-btn");
 const content = document.querySelector("#content");
@@ -27,6 +27,7 @@ sidebarBtn.addEventListener("click", () => {
     content.classList.toggle("expand-content");
 });
 
+renderProjectCatelogPage(projects);
 
 // TESTING LOCAL STORAGE
 // let test = new Project("some title 1", "testing local storage 1");
