@@ -4,9 +4,11 @@
     --main-darker-color: rgb(19, 20, 20);
     --outline-dark-color: rgb(77, 80, 84);
     --text-dark-color: rgb(232, 230, 227);
+    --todo-dark-color: rgb(45, 47, 50);
+    --todo-darker-color: rgb(33, 36, 43);
     --green: rgb(88 ,255, 150);
     --orange: rgb(255, 165, 26);
-    --red: rgb(203, 91, 91);
+    --red: rgb(189, 76, 76);
 }
 
 *:not(dialog) {
@@ -14,6 +16,7 @@
     padding: 0;
     box-sizing: border-box;
     color: var(--text-dark-color);
+    font-size: 1rem;
 }
 
 p {
@@ -24,6 +27,7 @@ svg {
     height: auto;
     width: 28px;
     fill: var(--text-dark-color);
+    flex-shrink: 0;
 }
 
 body {
@@ -113,7 +117,6 @@ nav ul {
 .main-nav-btn svg {
     margin-right: 6px;
     margin-left: 6px;
-    flex-shrink: 0;
 }
 
 .sub-nav-btn {
@@ -203,11 +206,150 @@ nav ul {
     overflow: hidden;
 }
 
-.del-project-btn:hover {
+.project-del-btn:hover {
     scale: 1.1;
 }
 
-.del-project-btn svg:hover {
+.project-del-btn svg:hover {
+    fill: var(--red);
+}
+
+/* Project page */
+
+.content-editable {
+    line-height: 1.5rem;
+}
+
+.content-editable:focus {
+    outline: 1px solid rgb(from var(--text-dark-color) r g b / 0.8);
+}
+
+.project-detail .project-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+.project-detail .project-desc {
+    padding: 10px 0;
+}
+
+.project-detail {
+    padding-bottom: 5px;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.4);
+    margin-bottom: 20px;
+}
+
+.todo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.todo-item {
+    background-color: var(--todo-dark-color);
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.todo-item-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-item-summary-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.todo-item-summary input[type="checkbox"] {
+    appearance: none;
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 2px solid gray;
+    border-radius: 5px;
+    position: relative;
+    color: green;
+    flex-shrink: 0;
+}
+
+.todo-item-summary input[type="checkbox"]::before {
+    content: "✔";
+    position: absolute;
+    font-size: 1.5rem;
+    left: 1px;
+    bottom: 0px;
+    visibility: hidden;
+}
+
+.todo-item-summary input[type="checkbox"]:checked::before {
+    visibility: visible;
+}
+
+.priority-svg {
+   width: 20px;
+}
+
+.high-priority {
+    fill: var(--red);
+}
+
+.mid-priority {
+    fill: var(--orange);
+}
+
+.low-priority {
+    fill: var(--green);
+}
+
+.due-date-input {
+    background-color: transparent;
+    border: none;
+    font-size: 0.8rem;
+    font-family: unset;
+}
+
+.todo-title {
+    /* max-height: 3ch; */
+}
+
+.todo-expand-btn:hover,
+.todo-edit-btn:hover,
+.todo-del-btn:hover {
+    scale: 1.1;
+}
+
+.todo-item-expanded {
+    margin-top: 5px;
+    height: 0;
+    overflow-y: hidden;
+    border-radius: 5px;
+    transition: height 0.6s;
+    transition: margin-top 0.6s;
+}
+
+.open-expanded {
+    margin-top: 5px;
+    height: unset;
+}
+
+.todo-btn-group-container {
+    display: flex;
+    margin-top: 10px;
+}
+
+.todo-btn-group {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+    border: 2px solid rgb(from var(--text-dark-color) r g b / 0.2);
+    border-radius: 5px;
+    padding: 3px 10px;
+}
+
+.todo-del-btn svg:hover {
     fill: var(--red);
 }
 

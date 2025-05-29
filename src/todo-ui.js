@@ -1,3 +1,5 @@
+import { TodoItem, getProjectFromUUID } from "./todo";
+
 const projGroupDiv = document.querySelector(".project-group");
 const main = document.querySelector(".main");
 
@@ -28,7 +30,7 @@ function renderProjectCatelogPage(projectList) {
         gridItem.classList.add("project-grid-item");
         btngroup.classList.add("project-btn-group");
         titleBtn.classList.add("project-title-btn");
-        delBtn.classList.add("del-project-btn", "logo-btn");
+        delBtn.classList.add("project-del-btn", "logo-btn");
         descP.classList.add("project-desc");
 
         titleBtn.textContent = proj.title;
@@ -41,9 +43,11 @@ function renderProjectCatelogPage(projectList) {
         gridItem.appendChild(descP);
         btngroup.appendChild(titleBtn);
         btngroup.appendChild(delBtn);
+
+        // add event handler to titleBtn and project delBtn
+        // ask for confirmation when deleting
     }
 
-    // add event handler
 }
 
 function delCurrContent() {
@@ -55,16 +59,16 @@ function delCurrContent() {
 
 function updateSidebar(project) {
     const li = document.createElement("li");
-    const btn = document.createElement("button");
+    const navBtn = document.createElement("button");
 
     projGroupDiv.appendChild(li);
-    li.appendChild(btn);
+    li.appendChild(navBtn);
 
-    btn.classList.add("nav-btn", "sub-nav-btn");
-    btn.textContent = project.title;
-    btn.dataset.uuid = project.UUID;
+    navBtn.classList.add("nav-btn", "sub-nav-btn");
+    navBtn.textContent = project.title;
+    navBtn.dataset.uuid = project.UUID;
 
-    // add event handler
+    // add event handler to navBtn
 }
 
 export { updateSidebar, renderProjectPage, renderProjectCatelogPage };

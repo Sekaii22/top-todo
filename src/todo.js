@@ -90,7 +90,7 @@ function reformProject(project) {
 
 function getProjectFromUUID(projectList, uuid) {
     let index = projectList.findIndex((proj) => proj.UUID === uuid);
-    return index;
+    return projectList[index];
 }
 
 export { TodoItem, Project, reformTodoItem, reformProject, getProjectFromUUID };

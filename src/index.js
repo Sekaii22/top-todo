@@ -1,6 +1,6 @@
 import "./styles.css";
-import { TodoItem, Project, reformProject } from "./todo";
-import { updateSidebar, renderProjectCatelogPage } from "./todo-ui";
+import { Project, reformProject } from "./todo";
+import { updateSidebar, renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
 
 const sidebarBtn = document.querySelector(".sidebar-btn");
 const content = document.querySelector("#content");
@@ -27,7 +27,9 @@ sidebarBtn.addEventListener("click", () => {
     content.classList.toggle("expand-content");
 });
 
-renderProjectCatelogPage(projects);
+// add event handler for creating new projects
+
+// renderProjectCatelogPage(projects);
 
 // TESTING LOCAL STORAGE
 // let test = new Project("some title 1", "testing local storage 1");
