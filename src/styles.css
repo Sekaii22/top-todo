@@ -33,6 +33,7 @@ svg {
 body {
     min-height: 100vh;
     background-color: var(--main-dark-color);
+    z-index: -2;
 }
 
 #sidebar {
@@ -54,6 +55,7 @@ body {
     flex-direction: column;
     margin-left: 300px;
     transition: margin-left 0.25s;
+    z-index: -1;
 }
 
 #sidebar.collapse-sidebar {
@@ -129,6 +131,8 @@ nav ul {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .sidebar-btn {
@@ -220,8 +224,9 @@ nav ul {
     line-height: 1.5rem;
 }
 
-.content-editable:focus {
-    outline: 1px solid rgb(from var(--text-dark-color) r g b / 0.8);
+.content-editable[contenteditable="true"]:focus {
+    outline: none;
+    /* outline: 1px solid rgb(from var(--text-dark-color) r g b / 0.8); */
 }
 
 .project-detail .project-title {
@@ -250,15 +255,10 @@ nav ul {
     background-color: var(--todo-dark-color);
     padding: 6px 10px;
     border-radius: 5px;
+    
 }
 
 .todo-item-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.todo-item-summary-left {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -292,15 +292,15 @@ nav ul {
    width: 20px;
 }
 
-.high-priority {
+.fill-red {
     fill: var(--red);
 }
 
-.mid-priority {
+.fill-orange {
     fill: var(--orange);
 }
 
-.low-priority {
+.fill-green {
     fill: var(--green);
 }
 
@@ -312,9 +312,10 @@ nav ul {
 }
 
 .todo-title {
-    /* max-height: 3ch; */
+    flex: 1;
 }
 
+.priority-btn:not(:disabled):hover,
 .todo-expand-btn:hover,
 .todo-edit-btn:hover,
 .todo-del-btn:hover {
@@ -322,17 +323,22 @@ nav ul {
 }
 
 .todo-item-expanded {
-    margin-top: 5px;
-    height: 0;
-    overflow-y: hidden;
+    margin-top: 0;
     border-radius: 5px;
-    transition: height 0.6s;
-    transition: margin-top 0.6s;
+
+    /* accordion */
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.2s, margin-top 0.2s;
+}
+
+.todo-item-expanded > div {
+    overflow-y: hidden;
 }
 
 .open-expanded {
     margin-top: 5px;
-    height: unset;
+    grid-template-rows: 1fr;
 }
 
 .todo-btn-group-container {

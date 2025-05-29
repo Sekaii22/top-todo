@@ -1,11 +1,11 @@
 class TodoItem {
-    constructor(title, desc, priority, dueDate) {
+    constructor(title, desc, priority, dueDate, isComplete=false) {
         this.UUID = crypto.randomUUID();
         this.title = title;
         this.desc = desc;
         this.priority = priority;
         this.dueDate =  dueDate;
-        this.isComplete = false;
+        this.isComplete = isComplete;
     }
 
     setTitle(str) {
@@ -18,15 +18,18 @@ class TodoItem {
 
     setPriority(num) {
         /* 0: low, 1: medium, 2: high */
+        let prioritySteps = 3
+
         if (num < 0) {
             this.priority = 0;
         }
-        else if (num > 2) {
-            this.priority = 2;
-        }
         else {
-            this.priority = num;
+            this.priority = num % prioritySteps;
         }
+    }
+
+    setDueDate(date) {
+        this.dueDate =  date;
     }
 
     setCompleteStatus(bool) {
@@ -93,4 +96,4 @@ function getProjectFromUUID(projectList, uuid) {
     return projectList[index];
 }
 
-export { TodoItem, Project, reformTodoItem, reformProject, getProjectFromUUID };
+export { TodoItem, Project, reformProject, getProjectFromUUID };

@@ -1,35 +1,15 @@
 import "./styles.css";
-import { Project, reformProject } from "./todo";
-import { updateSidebar, renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
+import { TodoItem, Project } from "./todo"; //DEBUG
+import { renderSidebar, renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
+import { projects, saveToLocalStorage } from "./storage"; //DEBUG
 
-const sidebarBtn = document.querySelector(".sidebar-btn");
-const content = document.querySelector("#content");
-const sidebar = document.querySelector("#sidebar");
-
-// get from local storage
-let projects = localStorage.getItem("projects");
-if (projects === null) {
-    projects = [new Project("Default", "Default project."), new Project("School work", "Project for school work.")];
-    localStorage.setItem("projects", JSON.stringify(projects));
-}
-else {
-    projects = JSON.parse(projects);
-}
-
-// reform obj and update sidebar
-for (let proj of projects) {
-    reformProject(proj);
-    updateSidebar(proj);
-}
-
-sidebarBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("collapse-sidebar");
-    content.classList.toggle("expand-content");
-});
-
-// add event handler for creating new projects
+renderSidebar();
 
 // renderProjectCatelogPage(projects);
+// projects[0].addTodoItem(new TodoItem("item1", "item1 desc", 1, new Date(), true));
+// projects[0].addTodoItem(new TodoItem("item2", "item2 desc", 2, new Date()));
+// saveToLocalStorage();
+renderProjectPage(projects[0]);
 
 // TESTING LOCAL STORAGE
 // let test = new Project("some title 1", "testing local storage 1");

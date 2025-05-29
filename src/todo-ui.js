@@ -1,10 +1,216 @@
-import { TodoItem, getProjectFromUUID } from "./todo";
+import { TodoItem, Project } from "./todo";
+import { projects, saveToLocalStorage } from "./storage"; 
 
+// get from local storage
 const projGroupDiv = document.querySelector(".project-group");
 const main = document.querySelector(".main");
 
+function delCurrContent() {
+    let child = main.firstElementChild;
+
+    if (child !== null)
+        main.removeChild(child);
+}
+
+function getPriorityClassString(num) {
+    let priorityClass = "";
+    if (num === 0) {
+        priorityClass = "fill-green";
+    }
+    else if (num === 1) {
+        priorityClass = "fill-orange";
+    }
+    else if (num === 2) {
+        priorityClass = "fill-red";
+    }
+    return priorityClass;
+}
+
+function createTodoItem(todo, project) {
+    if (!(todo instanceof TodoItem) || !(project instanceof Project)) {
+        return null;
+    }
+
+    // todo summary
+    const todoItemDiv = document.createElement("div");
+    todoItemDiv.classList.add("todo-item");
+
+    const summary = document.createElement("div");
+    summary.classList.add("todo-item-summary");
+    todoItemDiv.appendChild(summary);
+
+    const completeStatusCheckbox = document.createElement("input");
+    const priorityBtn = document.createElement("button");
+    const dueDateInput = document.createElement("input");
+    const todoTitle = document.createElement("div");
+    const expandBtn = document.createElement("button");
+    
+    completeStatusCheckbox.type = "checkbox";
+    priorityBtn.classList.add("priority-btn", "logo-btn");
+    dueDateInput.type = "date";
+    dueDateInput.classList.add("due-date-input");
+    todoTitle.classList.add("todo-title", "content-editable");
+    expandBtn.classList.add("todo-expand-btn", "logo-btn");
+
+    completeStatusCheckbox.checked = todo.isComplete
+    let priorityClass = getPriorityClassString(todo.priority);
+    // priorityBtn.disabled = true;
+    priorityBtn.innerHTML = `<svg class="${priorityClass} priority-svg" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M477-80q-83 0-156-31.5T194-197q-54-54-85.5-127T77-480q0-83 31.5-156T194-763q54-54 127-85.5T477-880q83 0 156 31.5T760-763q54 54 85.5 127T877-480q0 83-31.5 156T760-197q-54 54-127 85.5T477-80Zm91-93q78-23 135.5-80.5T784-389L568-173ZM171-574l212-212q-77 23-133 79t-79 133Zm-4 176 392-391q-12-3-24-5t-25-4L159-447q2 13 3.5 25t4.5 24Zm57 114 449-450q-8-6-16.5-12T639-757L200-318q5 9 11 17.5t13 16.5Zm91 81 438-439q-5-9-11-17.5T730-676L281-226q8 6 16.5 12t17.5 11Zm129 41 351-351q-2-13-4-25t-5-24L395-171q12 3 24 5t25 4Z"/></svg>`;
+    dueDateInput.valueAsDate = todo.dueDate;
+    dueDateInput.disabled = true;
+    todoTitle.textContent = todo.title;
+    todoTitle.spellcheck = false;
+    expandBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
+    
+    summary.appendChild(completeStatusCheckbox);
+    summary.appendChild(priorityBtn);
+    summary.appendChild(dueDateInput);
+    summary.appendChild(todoTitle);
+    summary.appendChild(expandBtn);
+
+    // todo expanded
+    const expanded = document.createElement("div");
+    const div = document.createElement("div");
+    expanded.classList.add("todo-item-expanded");
+    todoItemDiv.appendChild(expanded);
+    expanded.appendChild(div);
+
+    const todoDesc = document.createElement("div");
+    todoDesc.classList.add("todo-desc", "content-editable")
+    todoDesc.textContent = todo.desc;
+    todoDesc.spellcheck = false;
+    div.appendChild(todoDesc);
+
+    const todoBtnGroupContainer = document.createElement("div");
+    todoBtnGroupContainer.classList.add("todo-btn-group-container");
+    div.appendChild(todoBtnGroupContainer);
+
+    const todoBtnGroup = document.createElement("div");
+    todoBtnGroup.classList.add("todo-btn-group");
+    todoBtnGroupContainer.appendChild(todoBtnGroup);
+
+    const todoEditBtn = document.createElement("button");
+    const todoDelBtn = document.createElement("button");
+    todoEditBtn.classList.add("todo-edit-btn", "logo-btn");
+    todoDelBtn.classList.add("todo-del-btn", "logo-btn");
+    todoEditBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z"/></svg>`;
+    todoDelBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg>`;
+    todoBtnGroup.appendChild(todoEditBtn);
+    todoBtnGroup.appendChild(todoDelBtn);
+
+    // event handlers
+    completeStatusCheckbox.addEventListener("input", () => {
+        todo.setCompleteStatus(completeStatusCheckbox.checked);
+        saveToLocalStorage();
+    });
+
+    const prioritySvg = priorityBtn.firstElementChild;
+    priorityBtn.addEventListener("click", () => {
+        todo.setPriority(todo.priority + 1);
+        saveToLocalStorage();
+        priorityClass = getPriorityClassString(todo.priority);
+        prioritySvg.setAttribute("class", `${priorityClass} priority-svg`);
+    });
+
+    let isEditing = false;
+    const editSvg = todoEditBtn.firstElementChild;
+    const setEditing = function(bool) {
+        if (bool) {
+            todoTitle.contentEditable = "true";
+            todoDesc.contentEditable = "true";
+            dueDateInput.disabled = false;
+            editSvg.classList.add("fill-green");
+        } else {
+            todoTitle.contentEditable = "false";
+            todoDesc.contentEditable = "false";
+            dueDateInput.disabled = true;
+            editSvg.classList.remove("fill-green");
+        }
+    }
+    todoEditBtn.addEventListener("click", () => {
+        isEditing = !isEditing;
+        setEditing(isEditing);
+    });
+
+    expandBtn.addEventListener("click", ()=> {
+        expanded.classList.toggle("open-expanded");
+        isEditing = false;
+        setEditing(false);
+    });
+
+    dueDateInput.addEventListener("input", () => {
+        todo.setDueDate(new Date(dueDateInput.value));
+        saveToLocalStorage();
+    });
+
+    let todoTitleChange = false;
+    todoTitle.addEventListener("input", () => {
+        todoTitleChange = true;
+    });
+    todoTitle.addEventListener("focusout", () => {
+        if (todoTitleChange) {
+            todoTitleChange = false;
+            todo.setTitle(todoTitle.textContent);
+            saveToLocalStorage();
+        }
+    });
+
+    let todoDescChange = false;
+    todoDesc.addEventListener("input", () => {
+        todoDescChange = true;
+    });
+    todoDesc.addEventListener("focusout", () => {
+        if (todoDescChange) {
+            todoDescChange = false;
+            todo.setDesc(todoDesc.textContent);
+            saveToLocalStorage();
+        }
+    });
+
+    todoDelBtn.addEventListener("click", () => {
+        // remove from DOM
+        todoItemDiv.parentElement.removeChild(todoItemDiv);
+
+        // remove from project
+        project.deleteTodoItem(todo.UUID);
+        saveToLocalStorage();
+    });
+
+    return todoItemDiv;
+}
+
 function renderProjectPage(project) {
     delCurrContent();
+    
+    const page = document.createElement("div");
+    const projectDetail = document.createElement("div");
+    const projectTitle = document.createElement("div");
+    const projectDesc = document.createElement("div");
+    const todoContainer = document.createElement("div");
+
+    page.classList.add("page");
+    page.dataset.uuid = project.UUID;
+    projectDetail.classList.add("project-detail");
+    projectTitle.classList.add("project-title", "content-editable");
+    projectTitle.spellcheck = false;
+    projectTitle.contentEditable = "true"
+    projectTitle.textContent = project.title;
+    projectDesc.classList.add("project-desc", "content-editable");
+    projectDesc.spellcheck = false;
+    projectDesc.contentEditable = "true"
+    projectDesc.textContent = project.desc;
+    todoContainer.classList.add("todo-container");
+
+    main.appendChild(page);
+    page.appendChild(projectDetail);
+    page.appendChild(todoContainer);
+    projectDetail.appendChild(projectTitle);
+    projectDetail.appendChild(projectDesc);
+
+    for (let todo of project.todoList) {
+        const todoItemDiv = createTodoItem(todo, project);
+        todoContainer.appendChild(todoItemDiv);
+    }
 }
 
 function renderProjectCatelogPage(projectList) {
@@ -21,7 +227,7 @@ function renderProjectCatelogPage(projectList) {
 
     // add grid item for each project
     for (let proj of projectList) {
-        const gridItem = document.createElement("div");
+        const gridItem = document.createElement("div");gridItem
         const btngroup = document.createElement("div");
         const titleBtn = document.createElement("button");
         const delBtn = document.createElement("button")
@@ -47,17 +253,9 @@ function renderProjectCatelogPage(projectList) {
         // add event handler to titleBtn and project delBtn
         // ask for confirmation when deleting
     }
-
 }
 
-function delCurrContent() {
-    let child = main.firstElementChild;
-
-    if (child !== null)
-        main.removeChild(child);
-}
-
-function updateSidebar(project) {
+function addProjectToSidebar(project) {
     const li = document.createElement("li");
     const navBtn = document.createElement("button");
 
@@ -71,4 +269,22 @@ function updateSidebar(project) {
     // add event handler to navBtn
 }
 
-export { updateSidebar, renderProjectPage, renderProjectCatelogPage };
+function renderSidebar() {
+    const sidebarBtn = document.querySelector(".sidebar-btn");
+    const content = document.querySelector("#content");
+    const sidebar = document.querySelector("#sidebar");
+
+    // add proj nav to sidebar
+    for (let proj of projects) {
+        addProjectToSidebar(proj);
+    }
+
+    sidebarBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapse-sidebar");
+        content.classList.toggle("expand-content");
+    });
+
+    // add event handler for creating new projects
+}
+
+export { renderSidebar, renderProjectPage, renderProjectCatelogPage };
