@@ -1,5 +1,6 @@
 import { TodoItem, Project } from "./todo";
 import { projects, saveToLocalStorage } from "./storage"; 
+import "./modal";
 
 // get from local storage
 const projGroupDiv = document.querySelector(".project-group");
@@ -222,7 +223,7 @@ function renderProjectPage(project) {
         todoContainer.appendChild(todoItemDiv);
     }
 
-    // add event handler for projectTitle and projectDesc
+    // event handler for projectTitle
     let projectTitleChange = false;
     projectTitle.addEventListener("input", () => {
         projectTitleChange = true;
@@ -235,6 +236,7 @@ function renderProjectPage(project) {
         }
     });
 
+    // event handler for projectDesc
     let projectDescChange = false;
     projectDesc.addEventListener("input", () => {
         projectDescChange = true;
@@ -247,43 +249,20 @@ function renderProjectPage(project) {
         }
     });
 
-    // add event handler for creating new todo btn
+    // event handler for new todo btn
     const todoDialog = document.querySelector("#new-todo-dialog");
-    const todoDialogForm = document.querySelector("#new-todo-dialog form");
-    const todoDialogCloseBtn = document.querySelector("#new-todo-dialog .dialog-close-btn");
-    const todoDialogConfirmBtn = document.querySelector("#new-todo-dialog .dialog-confirm-btn");
-
-    const todoDialogTitleInput = document.querySelector("#dialog-todo-title-input");
-    const todoDialogDescInput = document.querySelector("#dialog-todo-desc-input");
-    const todoDialogPriorityInput = document.querySelector("#dialog-todo-priority-input");
-    const todoDialogDueDateInput = document.querySelector("#dialog-todo-due-date-input");
 
     todoDialogOpenBtn.addEventListener("click", () => todoDialog.showModal());
-    todoDialogCloseBtn.addEventListener("click", () => {
-        todoDialogForm.reset();
-        todoDialog.close();
-    });
 
-    todoDialogConfirmBtn.addEventListener("click", (event) => {
-        if (todoDialogForm.checkValidity()) {
-            event.preventDefault();
-            
-            let title = todoDialogTitleInput.value;
-            let desc = todoDialogDescInput.value;
-            let priority = Number(todoDialogPriorityInput.value);
-            let dueDate = new Date(todoDialogDueDateInput.value);
-            const newTodo = new TodoItem(title, desc, priority, dueDate);
+    todoDialog.addEventListener("newTodoSubmit", (event) => {
+        const newTodo = event.detail;
 
-            // save new todo
-            project.todoList.push(newTodo);
-            saveToLocalStorage();
+        // save new todo
+        project.todoList.push(newTodo);
+        saveToLocalStorage();
 
-            // add to new todo to DOM
-            todoContainer.appendChild(createTodoItem(newTodo, project));
-            
-            todoDialogForm.reset();
-            todoDialog.close();
-        }
+        // add to new todo to DOM
+        todoContainer.appendChild(createTodoItem(newTodo, project));
     });
 }
 
@@ -310,7 +289,7 @@ function createProjectItem(project) {
     btngroup.appendChild(titleBtn);
     btngroup.appendChild(delBtn);
 
-    // add event handler to titleBtn and project delBtn
+    // event handler to titleBtn and project delBtn
     // ask for confirmation when deleting
 
     return gridItem;
@@ -328,7 +307,7 @@ function renderProjectCatelogPage(projectList) {
     page.classList.add("page");
     gridContainer.classList.add("project-grid-container");
 
-    // add grid item for each project
+    // grid item for each project
     for (let proj of projectList) {   
         const gridItem = createProjectItem(proj);
         gridContainer.appendChild(gridItem);
@@ -346,7 +325,7 @@ function addProjectNavToSidebar(project) {
     navBtn.textContent = project.title;
     navBtn.dataset.uuid = project.UUID;
 
-    // add event handler to navBtn
+    // event handler to navBtn
 }
 
 function renderSidebar() {
@@ -354,53 +333,37 @@ function renderSidebar() {
     const content = document.querySelector("#content");
     const sidebar = document.querySelector("#sidebar");
 
-    // add proj nav to sidebar
+    // add proj nav buttons to sidebar
     for (let proj of projects) {
         addProjectNavToSidebar(proj);
     }
 
+    // event handler for collapsing sidebar
     sidebarBtn.addEventListener("click", () => {
         sidebar.classList.toggle("collapse-sidebar");
         content.classList.toggle("expand-content");
     });
 
-    // add event handler for creating new projects btn
+    // event handler for new project btn
     const projectDialog = document.querySelector("#new-project-dialog");
-    const projectDialogForm = document.querySelector("#new-project-dialog form");
     const projectDialogOpenBtn = document.querySelector("#dialog-project-open-btn");
-    const projectDialogCloseBtn = document.querySelector("#new-project-dialog .dialog-close-btn");
-    const projectDialogConfirmBtn = document.querySelector("#new-project-dialog .dialog-confirm-btn");
-
-    const projectDialogTitleInput = document.querySelector("#dialog-project-title-input");
-    const projectDialogDescInput = document.querySelector("#dialog-project-desc-input");
 
     projectDialogOpenBtn.addEventListener("click", () => projectDialog.showModal());
-    projectDialogCloseBtn.addEventListener("click", () => {
-        projectDialogForm.reset();
-        projectDialog.close();
-    });
 
-    projectDialogConfirmBtn.addEventListener("click", (event) => {
-        if (projectDialogForm.checkValidity()) {
-            event.preventDefault();
-            
-            const newProj = new Project(projectDialogTitleInput.value, projectDialogDescInput.value);
+    projectDialog.addEventListener("newProjectSubmit", (event) => {
+        const newProj = event.detail;
 
-            // save new proj
-            projects.push(newProj);
-            saveToLocalStorage();
+        // save new proj
+        projects.push(newProj);
+        saveToLocalStorage();
 
-            // add new project to sidebar as a nav
-            addProjectNavToSidebar(newProj);
+        // add new project to sidebar as a nav
+        addProjectNavToSidebar(newProj);
 
-            // add new project item to project catalog if it is currently opened
-            const projCatalogGridContainer = document.querySelector(".project-grid-container");
-            if (projCatalogGridContainer) {
-                projCatalogGridContainer.appendChild(createProjectItem(newProj));
-            }
-            
-            projectDialogForm.reset();
-            projectDialog.close();
+        // add new project item to project catalog if it is currently opened
+        const projCatalogGridContainer = document.querySelector(".project-grid-container");
+        if (projCatalogGridContainer) {
+            projCatalogGridContainer.appendChild(createProjectItem(newProj));
         }
     });
 }

@@ -37,8 +37,8 @@ renderProjectCatelogPage(projects);
 //  - modal for create new todo item (Done)
 //  - add todo item button in project page (Done)
 //  - Add event handlers for modal (Done)
-//  - event handler to sidebar navBtn
 //  - event handers for titleBtn and project delBtn in project catalog page.
+//  - event handler to sidebar navBtn
 //  - event hander for sidebar create new project button
 
 
