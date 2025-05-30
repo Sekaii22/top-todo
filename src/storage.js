@@ -8,14 +8,14 @@ function getFromLocalStorage() {
     let projects = localStorage.getItem("projects");
     if (projects === null) {
         projects = [new Project("Default", "Default project.")];
-        saveToLocalStorage(projects);
+        saveToLocalStorage();
     }
     else {
         projects = JSON.parse(projects);
-    }
 
-    for (let proj of projects) {
-        reformProject(proj);
+        for (let proj of projects) {
+            reformProject(proj);
+        }
     }
 
     return projects;

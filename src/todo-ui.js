@@ -55,7 +55,7 @@ function createTodoItem(todo, project) {
     completeStatusCheckbox.checked = todo.isComplete
     let priorityClass = getPriorityClassString(todo.priority);
     // priorityBtn.disabled = true;
-    priorityBtn.title = "priority";
+    priorityBtn.title = "Priority";
     priorityBtn.innerHTML = `<svg class="${priorityClass} priority-svg" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M477-80q-83 0-156-31.5T194-197q-54-54-85.5-127T77-480q0-83 31.5-156T194-763q54-54 127-85.5T477-880q83 0 156 31.5T760-763q54 54 85.5 127T877-480q0 83-31.5 156T760-197q-54 54-127 85.5T477-80Zm91-93q78-23 135.5-80.5T784-389L568-173ZM171-574l212-212q-77 23-133 79t-79 133Zm-4 176 392-391q-12-3-24-5t-25-4L159-447q2 13 3.5 25t4.5 24Zm57 114 449-450q-8-6-16.5-12T639-757L200-318q5 9 11 17.5t13 16.5Zm91 81 438-439q-5-9-11-17.5T730-676L281-226q8 6 16.5 12t17.5 11Zm129 41 351-351q-2-13-4-25t-5-24L395-171q12 3 24 5t25 4Z"/></svg>`;
     if (todo.dueDate) {
         dueDateInput.valueAsDate = todo.dueDate;
@@ -190,6 +190,7 @@ function renderProjectPage(project) {
     const projectTitle = document.createElement("div");
     const projectDesc = document.createElement("div");
     const todoContainer = document.createElement("div");
+    const todoDialogOpenBtn = document.createElement("button");
 
     page.classList.add("page");
     page.dataset.uuid = project.UUID;
@@ -203,10 +204,15 @@ function renderProjectPage(project) {
     projectDesc.contentEditable = "true"
     projectDesc.textContent = project.desc;
     todoContainer.classList.add("todo-container");
+    todoDialogOpenBtn.classList.add("logo-btn");
+    todoDialogOpenBtn.id = "dialog-todo-open-btn";
+    todoDialogOpenBtn.title = "Add new todo";
+    todoDialogOpenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>`;
 
     main.appendChild(page);
     page.appendChild(projectDetail);
     page.appendChild(todoContainer);
+    page.appendChild(todoDialogOpenBtn);
     projectDetail.appendChild(projectTitle);
     projectDetail.appendChild(projectDesc);
 
@@ -240,6 +246,74 @@ function renderProjectPage(project) {
             saveToLocalStorage();
         }
     });
+
+    // add event handler for creating new todo btn
+    const todoDialog = document.querySelector("#new-todo-dialog");
+    const todoDialogForm = document.querySelector("#new-todo-dialog form");
+    const todoDialogCloseBtn = document.querySelector("#new-todo-dialog .dialog-close-btn");
+    const todoDialogConfirmBtn = document.querySelector("#new-todo-dialog .dialog-confirm-btn");
+
+    const todoDialogTitleInput = document.querySelector("#dialog-todo-title-input");
+    const todoDialogDescInput = document.querySelector("#dialog-todo-desc-input");
+    const todoDialogPriorityInput = document.querySelector("#dialog-todo-priority-input");
+    const todoDialogDueDateInput = document.querySelector("#dialog-todo-due-date-input");
+
+    todoDialogOpenBtn.addEventListener("click", () => todoDialog.showModal());
+    todoDialogCloseBtn.addEventListener("click", () => {
+        todoDialogForm.reset();
+        todoDialog.close();
+    });
+
+    todoDialogConfirmBtn.addEventListener("click", (event) => {
+        if (todoDialogForm.checkValidity()) {
+            event.preventDefault();
+            
+            let title = todoDialogTitleInput.value;
+            let desc = todoDialogDescInput.value;
+            let priority = Number(todoDialogPriorityInput.value);
+            let dueDate = new Date(todoDialogDueDateInput.value);
+            const newTodo = new TodoItem(title, desc, priority, dueDate);
+
+            // save new todo
+            project.todoList.push(newTodo);
+            saveToLocalStorage();
+
+            // add to new todo to DOM
+            todoContainer.appendChild(createTodoItem(newTodo, project));
+            
+            todoDialogForm.reset();
+            todoDialog.close();
+        }
+    });
+}
+
+function createProjectItem(project) {
+    const gridItem = document.createElement("div");
+    const btngroup = document.createElement("div");
+    const titleBtn = document.createElement("button");
+    const delBtn = document.createElement("button")
+    const descP = document.createElement("p");
+
+    gridItem.classList.add("project-grid-item");
+    btngroup.classList.add("project-btn-group");
+    titleBtn.classList.add("project-title-btn");
+    delBtn.classList.add("project-del-btn", "logo-btn");
+    descP.classList.add("project-desc");
+
+    titleBtn.textContent = project.title;
+    titleBtn.dataset.uuid = project.UUID;
+    descP.textContent = project.desc;
+    delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>`;
+
+    gridItem.appendChild(btngroup);
+    gridItem.appendChild(descP);
+    btngroup.appendChild(titleBtn);
+    btngroup.appendChild(delBtn);
+
+    // add event handler to titleBtn and project delBtn
+    // ask for confirmation when deleting
+
+    return gridItem;
 }
 
 function renderProjectCatelogPage(projectList) {
@@ -255,36 +329,13 @@ function renderProjectCatelogPage(projectList) {
     gridContainer.classList.add("project-grid-container");
 
     // add grid item for each project
-    for (let proj of projectList) {
-        const gridItem = document.createElement("div");gridItem
-        const btngroup = document.createElement("div");
-        const titleBtn = document.createElement("button");
-        const delBtn = document.createElement("button")
-        const descP = document.createElement("p");
-
-        gridItem.classList.add("project-grid-item");
-        btngroup.classList.add("project-btn-group");
-        titleBtn.classList.add("project-title-btn");
-        delBtn.classList.add("project-del-btn", "logo-btn");
-        descP.classList.add("project-desc");
-
-        titleBtn.textContent = proj.title;
-        titleBtn.dataset.uuid = proj.UUID;
-        descP.textContent = proj.desc;
-        delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>`;
-    
+    for (let proj of projectList) {   
+        const gridItem = createProjectItem(proj);
         gridContainer.appendChild(gridItem);
-        gridItem.appendChild(btngroup);
-        gridItem.appendChild(descP);
-        btngroup.appendChild(titleBtn);
-        btngroup.appendChild(delBtn);
-
-        // add event handler to titleBtn and project delBtn
-        // ask for confirmation when deleting
     }
 }
 
-function addProjectToSidebar(project) {
+function addProjectNavToSidebar(project) {
     const li = document.createElement("li");
     const navBtn = document.createElement("button");
 
@@ -305,7 +356,7 @@ function renderSidebar() {
 
     // add proj nav to sidebar
     for (let proj of projects) {
-        addProjectToSidebar(proj);
+        addProjectNavToSidebar(proj);
     }
 
     sidebarBtn.addEventListener("click", () => {
@@ -313,7 +364,45 @@ function renderSidebar() {
         content.classList.toggle("expand-content");
     });
 
-    // add event handler for creating new projects
+    // add event handler for creating new projects btn
+    const projectDialog = document.querySelector("#new-project-dialog");
+    const projectDialogForm = document.querySelector("#new-project-dialog form");
+    const projectDialogOpenBtn = document.querySelector("#dialog-project-open-btn");
+    const projectDialogCloseBtn = document.querySelector("#new-project-dialog .dialog-close-btn");
+    const projectDialogConfirmBtn = document.querySelector("#new-project-dialog .dialog-confirm-btn");
+
+    const projectDialogTitleInput = document.querySelector("#dialog-project-title-input");
+    const projectDialogDescInput = document.querySelector("#dialog-project-desc-input");
+
+    projectDialogOpenBtn.addEventListener("click", () => projectDialog.showModal());
+    projectDialogCloseBtn.addEventListener("click", () => {
+        projectDialogForm.reset();
+        projectDialog.close();
+    });
+
+    projectDialogConfirmBtn.addEventListener("click", (event) => {
+        if (projectDialogForm.checkValidity()) {
+            event.preventDefault();
+            
+            const newProj = new Project(projectDialogTitleInput.value, projectDialogDescInput.value);
+
+            // save new proj
+            projects.push(newProj);
+            saveToLocalStorage();
+
+            // add new project to sidebar as a nav
+            addProjectNavToSidebar(newProj);
+
+            // add new project item to project catalog if it is currently opened
+            const projCatalogGridContainer = document.querySelector(".project-grid-container");
+            if (projCatalogGridContainer) {
+                projCatalogGridContainer.appendChild(createProjectItem(newProj));
+            }
+            
+            projectDialogForm.reset();
+            projectDialog.close();
+        }
+    });
 }
 
 export { renderSidebar, renderProjectPage, renderProjectCatelogPage };

@@ -5,11 +5,11 @@ import { projects, saveToLocalStorage } from "./storage"; //DEBUG
 
 renderSidebar();
 
-// renderProjectCatelogPage(projects);
+renderProjectCatelogPage(projects);
 // projects[0].addTodoItem(new TodoItem("item1", "item1 desc", 1, new Date(), true));
 // projects[0].addTodoItem(new TodoItem("item2", "item2 desc", 2, new Date()));
 // saveToLocalStorage();
-renderProjectPage(projects[0]);
+// renderProjectPage(projects[0]);
 
 // TESTING LOCAL STORAGE
 // let test = new Project("some title 1", "testing local storage 1");
@@ -34,49 +34,12 @@ renderProjectPage(projects[0]);
 // TODOs:
 //  - event handlers for editing project title and desc in project page. (DONE)
 //  - modal for create new project (Done)
-//  - modal for create new todo item
-//  - Add event handlers for modal
-//  - add todo item button in project page.
-//  - event handers for titleBtn and project delBtn in project catalog page.
+//  - modal for create new todo item (Done)
+//  - add todo item button in project page (Done)
+//  - Add event handlers for modal (Done)
 //  - event handler to sidebar navBtn
+//  - event handers for titleBtn and project delBtn in project catalog page.
 //  - event hander for sidebar create new project button
 
-const projectDialog = document.querySelector("#new-project-dialog");
-const projectDialogArea = document.querySelector("#new-project-dialog > div");
-const projectDialogForm = document.querySelector("#new-project-dialog form");
-const projectDialogOpenBtn = document.querySelector("#dialog-project-open-btn");
-const projectDialogCloseBtn = document.querySelector("#new-project-dialog .dialog-close-btn");
-const projectDialogConfirmBtn = document.querySelector("#new-project-dialog .dialog-confirm-btn");
 
-projectDialogOpenBtn.addEventListener("click", () => projectDialog.showModal());
-projectDialogCloseBtn.addEventListener("click", () => projectDialog.close());
-
-projectDialog.addEventListener("click", () => projectDialog.close());
-projectDialogArea.addEventListener("click", (e) => e.stopPropagation());
-
-// Prevent the "confirm" button from the default behavior of submitting the form, and close the dialog with the `close()` method, which triggers a "close" event.
-projectDialogConfirmBtn.addEventListener("click", (event) => {
-	if (projectDialogForm.checkValidity()) {
-		event.preventDefault();
-		
-		// work with form input data here....
-        alert("add new project");
-		
-		projectDialogForm.reset();
-		projectDialog.close();
-	}
-});
-
-const todoDialog = document.querySelector("#new-todo-dialog");
-const todoDialogArea = document.querySelector("#new-todo-dialog > div");
-// const todoDialogForm = document.querySelector("#new-todo-dialog form");
-const todoDialogOpenBtn = document.querySelector("#dialog-todo-open-btn");
-const todoDialogCloseBtn = document.querySelector("#new-todo-dialog .dialog-close-btn");
-// const todoDialogConfirmBtn = document.querySelector("#new-todo-dialog .dialog-confirm-btn");
-
-todoDialogOpenBtn.addEventListener("click", () => todoDialog.showModal());
-todoDialogCloseBtn.addEventListener("click", () => todoDialog.close());
-
-todoDialog.addEventListener("click", () => todoDialog.close());
-todoDialogArea.addEventListener("click", (e) => e.stopPropagation());
 
