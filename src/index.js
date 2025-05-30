@@ -31,3 +31,12 @@ renderProjectPage(projects[0]);
 
 // console.log(arr);
 
+// TODOs:
+//  - event handlers for editing project title and desc in project page. (DONE)
+//  - modal for create new todo item
+//  - add todo item button in project page.
+//  - event handers for titleBtn and project delBtn in project catalog page.
+//  - event handler to sidebar navBtn
+//  - modal for create new project
+//  - event hander for sidebar create new project button
+

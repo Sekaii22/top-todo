@@ -1,5 +1,5 @@
 class TodoItem {
-    constructor(title, desc, priority, dueDate, isComplete=false) {
+    constructor(title="", desc="", priority=0, dueDate=new Date(), isComplete=false) {
         this.UUID = crypto.randomUUID();
         this.title = title;
         this.desc = desc;
@@ -38,7 +38,7 @@ class TodoItem {
 }
 
 class Project {
-    constructor(title, desc) {
+    constructor(title="", desc="") {
         this.UUID = crypto.randomUUID();
         this.title = title;
         this.desc = desc;
