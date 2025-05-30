@@ -367,7 +367,7 @@ dialog::backdrop {
 
 .dialog-area {
     background-color: var(--modal-dark-color);
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 10px;
     min-width: fit-content;
     position: relative;
@@ -385,11 +385,12 @@ dialog::backdrop {
     font-size: 1.1rem;
 }
 
-.dialog-area input[type="text"],
-.dialog-area textarea {
+.dialog-area input,
+.dialog-area textarea,
+.dialog-area select  {
     color: black;
     margin-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     padding: 8px 12px;
     font-size: 1.1rem;
     width: max(220px, 25vw);
@@ -406,15 +407,15 @@ dialog::backdrop {
     color: black;
     font-size: 1.1rem;
     padding: 10px 25px;
-    margin-left: 20px;
     border: none;
     border-radius: 8px;
+    margin-top: 16px;
 }
 
 .dialog-area caption {
     font-size: 1.7rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .dialog-close-btn {

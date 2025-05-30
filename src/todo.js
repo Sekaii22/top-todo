@@ -1,5 +1,5 @@
 class TodoItem {
-    constructor(title="", desc="", priority=0, dueDate=new Date(), isComplete=false) {
+    constructor(title="", desc="", priority=0, dueDate=null, isComplete=false) {
         this.UUID = crypto.randomUUID();
         this.title = title;
         this.desc = desc;
