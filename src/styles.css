@@ -9,6 +9,7 @@
     --green: rgb(88 ,255, 150);
     --orange: rgb(255, 165, 26);
     --red: rgb(189, 76, 76);
+    --modal-dark-color: rgb(39, 55, 81);
 }
 
 *:not(dialog) {
@@ -17,6 +18,7 @@
     box-sizing: border-box;
     color: var(--text-dark-color);
     font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 p {
@@ -53,6 +55,7 @@ body {
     padding: 10px;
     display: flex;
     flex-direction: column;
+
     margin-left: 300px;
     transition: margin-left 0.25s;
     z-index: -1;
@@ -127,6 +130,12 @@ nav ul {
 
 /* Content */
 
+.content-header {
+    height: 90px;
+    display: flex;
+    align-items: center;
+}
+
 .logo-btn {
     background-color: transparent;
     border: none;
@@ -135,22 +144,16 @@ nav ul {
     align-items: center;
 }
 
+.logo-btn:hover {
+    scale: 1.1;
+}
+
 .sidebar-btn {
     padding: 5px;
 }
 
-.sidebar-btn:hover {
-    scale: 1.1;
-}
-
 .sidebar-btn svg {
     width: 34px;
-}
-
-.content-header {
-    height: 90px;
-    display: flex;
-    align-items: center;
 }
 
 .main {
@@ -210,10 +213,6 @@ nav ul {
     overflow: hidden;
 }
 
-.project-del-btn:hover {
-    scale: 1.1;
-}
-
 .project-del-btn svg:hover {
     fill: var(--red);
 }
@@ -236,6 +235,7 @@ nav ul {
 }
 
 .project-detail .project-desc {
+    font-size: 1.1rem;
     padding: 10px 0;
 }
 
@@ -315,13 +315,6 @@ nav ul {
     flex: 1;
 }
 
-.priority-btn:not(:disabled):hover,
-.todo-expand-btn:hover,
-.todo-edit-btn:hover,
-.todo-del-btn:hover {
-    scale: 1.1;
-}
-
 .todo-item-expanded {
     margin-top: 0;
     border-radius: 5px;
@@ -358,4 +351,76 @@ nav ul {
 .todo-del-btn svg:hover {
     fill: var(--red);
 }
+
+/* Modals */
+
+dialog {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+dialog::backdrop {
+    background-color: black;
+    opacity: 0.75;
+}
+
+.dialog-area {
+    background-color: var(--modal-dark-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    min-width: fit-content;
+    position: relative;
+}
+
+.dialog-area th {
+    text-align: left;
+}
+
+.dialog-area td {
+    text-align: right;
+}
+
+.dialog-area label {
+    font-size: 1.1rem;
+}
+
+.dialog-area input[type="text"],
+.dialog-area textarea {
+    color: black;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: 1.1rem;
+    width: max(220px, 25vw);
+    border: none;
+    border-radius: 5px;
+}
+
+.dialog-area textarea {
+    height: 10rem;
+    resize: none;
+}
+
+.dialog-confirm-btn {
+    color: black;
+    font-size: 1.1rem;
+    padding: 10px 25px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 8px;
+}
+
+.dialog-area caption {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.dialog-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px
+}
+
 

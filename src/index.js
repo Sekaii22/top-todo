@@ -40,3 +40,15 @@ renderProjectPage(projects[0]);
 //  - modal for create new project
 //  - event hander for sidebar create new project button
 
+const projectDialog = document.querySelector("#new-project-dialog");
+const projectDialogArea = document.querySelector("#new-project-dialog > div");
+const projectDialogOpenBtn = document.querySelector("#project-dialog-open-btn");
+const projectDialogCloseBtn = document.querySelector("#new-project-dialog .dialog-close-btn");
+
+projectDialogOpenBtn.addEventListener("click", () => projectDialog.showModal());
+projectDialogCloseBtn.addEventListener("click", () => projectDialog.close());
+
+projectDialog.addEventListener("click", () => projectDialog.close());
+projectDialogArea.addEventListener("click", (e) => e.stopPropagation());
+
+
