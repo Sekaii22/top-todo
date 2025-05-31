@@ -63,7 +63,6 @@ todoDialogConfirmBtn.addEventListener("click", (event) => {
         });
         todoDialog.dispatchEvent(newTodoEvent);
         
-        
         todoDialogForm.reset();
         todoDialog.close();
     }

@@ -1,4 +1,3 @@
-import { TodoItem, Project } from "./todo";
 import { projects, saveToLocalStorage } from "./storage"; 
 import "./modal";
 
@@ -8,8 +7,11 @@ const main = document.querySelector(".main");
 function delCurrContent() {
     let child = main.firstElementChild;
 
-    if (child !== null)
+    if (child !== null){
+        let pageDeleteEvent = new CustomEvent("pageDelete");
+        main.dispatchEvent(pageDeleteEvent);
         main.removeChild(child);
+    }
 }
 
 function getPriorityClassString(num) {
@@ -27,10 +29,6 @@ function getPriorityClassString(num) {
 }
 
 function createTodoItem(todo, project) {
-    if (!(todo instanceof TodoItem) || !(project instanceof Project)) {
-        return null;
-    }
-
     // todo summary
     const todoItemDiv = document.createElement("div");
     todoItemDiv.classList.add("todo-item");
@@ -218,6 +216,7 @@ function renderProjectPage(project) {
 
     // create todo items
     for (let todo of project.todoList) {
+        console.log(todo.title);
         const todoItemDiv = createTodoItem(todo, project);
         todoContainer.appendChild(todoItemDiv);
     }
@@ -250,19 +249,29 @@ function renderProjectPage(project) {
 
     // event handler for new todo btn
     const todoDialog = document.querySelector("#new-todo-dialog");
-
     todoDialogOpenBtn.addEventListener("click", () => todoDialog.showModal());
 
-    todoDialog.addEventListener("newTodoSubmit", (event) => {
+    // event handler for todoDialog submit and page deletion
+    let newTodoSubmitHandler = function (event) {
         const newTodo = event.detail;
 
         // save new todo
-        project.todoList.push(newTodo);
+        project.addTodoItem(newTodo);
         saveToLocalStorage();
 
         // add to new todo to DOM
         todoContainer.appendChild(createTodoItem(newTodo, project));
-    });
+    };
+    todoDialog.addEventListener("newTodoSubmit", newTodoSubmitHandler);
+
+    // need to remove handlers if not every project page load will keep increasing
+    // the number of event listeners on todoDialog since the dialog element is not removed 
+    // when current page is removed.
+    let pageDeleteHandler = function() {
+        todoDialog.removeEventListener("newTodoSubmit", newTodoSubmitHandler);
+        main.removeEventListener("pageDelete", pageDeleteHandler);
+    };
+    main.addEventListener("pageDelete", pageDeleteHandler);
 }
 
 function createProjectItem(project) {
