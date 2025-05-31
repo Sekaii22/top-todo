@@ -36,10 +36,11 @@ renderProjectCatelogPage(projects);
 //  - modal for create new project (Done)
 //  - modal for create new todo item (Done)
 //  - add todo item button in project page (Done)
+//  - event hander for sidebar create new project button (Done)
 //  - Add event handlers for modal (Done)
-//  - event handers for titleBtn and project delBtn in project catalog page.
-//  - event handler to sidebar navBtn
-//  - event hander for sidebar create new project button
+//  - event handler to sidebar navBtn (Done)
+//  - event handers for titleBtn and project delBtn in project catalog page (Done)
+//  - Move sidebar logic out of todo-ui.js
 
 
 

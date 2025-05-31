@@ -3,7 +3,6 @@ import { projects, saveToLocalStorage } from "./storage";
 import "./modal";
 
 // get from local storage
-const projGroupDiv = document.querySelector(".project-group");
 const main = document.querySelector(".main");
 
 function delCurrContent() {
@@ -289,8 +288,27 @@ function createProjectItem(project) {
     btngroup.appendChild(titleBtn);
     btngroup.appendChild(delBtn);
 
-    // event handler to titleBtn and project delBtn
-    // ask for confirmation when deleting
+    // event handler for titleBtn
+    titleBtn.addEventListener("click", () => renderProjectPage(project));
+    
+    // event handler for project delBtn
+    delBtn.addEventListener("click", () => {
+        let confirmationText = `Are you sure you want to delete "${project.title}" project?`
+        
+        // ask for confirmation when deleting
+        if (confirm(confirmationText) === true) {
+            // remove from DOM
+            gridItem.parentElement.removeChild(gridItem);
+            removeProjectNavFromSidebar(project);
+            
+            // remove from projects arr and local storage
+            let index = projects.findIndex((item) => item.UUID === project.UUID);
+            if (index !== -1) {
+                projects.splice(index, 1);
+            }
+            saveToLocalStorage();
+        }
+    });
 
     return gridItem;
 }
@@ -315,6 +333,7 @@ function renderProjectCatelogPage(projectList) {
 }
 
 function addProjectNavToSidebar(project) {
+    const projGroupDiv = document.querySelector(".project-group");
     const li = document.createElement("li");
     const navBtn = document.createElement("button");
 
@@ -325,7 +344,17 @@ function addProjectNavToSidebar(project) {
     navBtn.textContent = project.title;
     navBtn.dataset.uuid = project.UUID;
 
-    // event handler to navBtn
+    // event handler for navBtn
+    navBtn.addEventListener("click", () => renderProjectPage(project));
+}
+
+function removeProjectNavFromSidebar(project) {
+    const projGroupDiv = document.querySelector(".project-group");
+    const navBtn = projGroupDiv.querySelector(`button[data-uuid="${project.UUID}"]`);
+    if (navBtn) {
+        const li = navBtn.parentElement;
+        li.parentElement.removeChild(li);
+    }
 }
 
 function renderSidebar() {
@@ -366,6 +395,10 @@ function renderSidebar() {
             projCatalogGridContainer.appendChild(createProjectItem(newProj));
         }
     });
+
+    // event handler for project catalog page
+    const projectCatalogNavBtn = document.querySelector("#project-catalog-btn");
+    projectCatalogNavBtn.addEventListener("click", () => renderProjectCatelogPage(projects));    
 }
 
 export { renderSidebar, renderProjectPage, renderProjectCatelogPage };
