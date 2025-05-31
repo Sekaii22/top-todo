@@ -1,7 +1,6 @@
 import { projects, saveToLocalStorage } from "./storage"; 
 import "./modal";
 
-// get from local storage
 const main = document.querySelector(".main");
 
 function delCurrContent() {
@@ -28,6 +27,7 @@ function getPriorityClassString(num) {
     return priorityClass;
 }
 
+/* Project */
 function createTodoItem(todo, project) {
     // todo summary
     const todoItemDiv = document.createElement("div");
@@ -182,6 +182,9 @@ function createTodoItem(todo, project) {
 
 function renderProjectPage(project) {
     delCurrContent();
+
+    const navBtn = document.querySelector(`button[data-uuid="${project.UUID}"]`);
+    highlightSidebarNav(navBtn)
     
     const page = document.createElement("div");
     const projectDetail = document.createElement("div");
@@ -216,7 +219,6 @@ function renderProjectPage(project) {
 
     // create todo items
     for (let todo of project.todoList) {
-        console.log(todo.title);
         const todoItemDiv = createTodoItem(todo, project);
         todoContainer.appendChild(todoItemDiv);
     }
@@ -231,6 +233,9 @@ function renderProjectPage(project) {
             projectTitleChange = false;
             project.setTitle(projectTitle.textContent);
             saveToLocalStorage();
+
+            const navBtn = document.querySelector(`button[data-uuid="${project.UUID}"]`);
+            navBtn.textContent = project.title;
         }
     });
 
@@ -274,6 +279,7 @@ function renderProjectPage(project) {
     main.addEventListener("pageDelete", pageDeleteHandler);
 }
 
+/* Project Catelog */
 function createProjectItem(project) {
     const gridItem = document.createElement("div");
     const btngroup = document.createElement("div");
@@ -325,6 +331,9 @@ function createProjectItem(project) {
 function renderProjectCatelogPage(projectList) {
     delCurrContent();
 
+    const projectCatalogNavBtn = document.querySelector("#project-catalog-btn");
+    highlightSidebarNav(projectCatalogNavBtn);
+
     const page = document.createElement("div");
     const gridContainer = document.createElement("div");
 
@@ -341,20 +350,21 @@ function renderProjectCatelogPage(projectList) {
     }
 }
 
-function addProjectNavToSidebar(project) {
-    const projGroupDiv = document.querySelector(".project-group");
+/* Sidebar */
+function createProjectNavBtn(project) {
     const li = document.createElement("li");
     const navBtn = document.createElement("button");
 
-    projGroupDiv.appendChild(li);
     li.appendChild(navBtn);
 
     navBtn.classList.add("nav-btn", "sub-nav-btn");
     navBtn.textContent = project.title;
     navBtn.dataset.uuid = project.UUID;
 
-    // event handler for navBtn
+    // event handler for project navBtn
     navBtn.addEventListener("click", () => renderProjectPage(project));
+
+    return li;
 }
 
 function removeProjectNavFromSidebar(project) {
@@ -366,14 +376,16 @@ function removeProjectNavFromSidebar(project) {
     }
 }
 
-function renderSidebar() {
+function renderSidebarProjectNav() {
+    const projGroupDiv = document.querySelector(".project-group");
     const sidebarBtn = document.querySelector(".sidebar-btn");
     const content = document.querySelector("#content");
     const sidebar = document.querySelector("#sidebar");
 
     // add proj nav buttons to sidebar
     for (let proj of projects) {
-        addProjectNavToSidebar(proj);
+        const li = createProjectNavBtn(proj);
+        projGroupDiv.appendChild(li);
     }
 
     // event handler for collapsing sidebar
@@ -396,7 +408,8 @@ function renderSidebar() {
         saveToLocalStorage();
 
         // add new project to sidebar as a nav
-        addProjectNavToSidebar(newProj);
+        const li = createProjectNavBtn(newProj);
+        projGroupDiv.appendChild(li);
 
         // add new project item to project catalog if it is currently opened
         const projCatalogGridContainer = document.querySelector(".project-grid-container");
@@ -405,9 +418,20 @@ function renderSidebar() {
         }
     });
 
-    // event handler for project catalog page
+    // event handler for project catalog page btn
     const projectCatalogNavBtn = document.querySelector("#project-catalog-btn");
     projectCatalogNavBtn.addEventListener("click", () => renderProjectCatelogPage(projects));    
 }
 
-export { renderSidebar, renderProjectPage, renderProjectCatelogPage };
+function highlightSidebarNav(btn) {
+    // highlights only nav btn for the currently active page
+    let navBtnArr = document.querySelectorAll(".nav-btn");
+    for (let nav of navBtnArr) {
+        nav.disabled = false;
+    }
+    btn.disabled = true;
+}
+
+renderSidebarProjectNav();
+
+export { renderProjectPage, renderProjectCatelogPage };

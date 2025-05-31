@@ -1,8 +1,6 @@
 import "./styles.css";
-import { renderSidebar, renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
-import { projects, saveToLocalStorage } from "./storage"; //DEBUG
-
-renderSidebar();
+import { renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
+import { projects } from "./storage"; //DEBUG
 
 renderProjectCatelogPage(projects);
 // renderProjectPage(projects[0]);
@@ -16,8 +14,7 @@ renderProjectCatelogPage(projects);
 //  - Add event handlers for modal (Done)
 //  - event handler to sidebar navBtn (Done)
 //  - event handers for titleBtn and project delBtn in project catalog page (Done)
-//  - Move sidebar logic out of todo-ui.js
-//  - nav button highlight showing current page
+//  - nav button highlight showing current page (Done)
 
 
 
