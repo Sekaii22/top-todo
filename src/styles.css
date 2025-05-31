@@ -209,13 +209,8 @@ nav ul {
 }
 
 .project-grid-item .project-desc {
-    height: 60%;
-
-    /* Add ellipses on line 6 when overflow */
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
-    overflow: hidden;
+    height: 70%;
+    overflow: auto;
 }
 
 .project-del-btn svg:hover {
@@ -224,13 +219,13 @@ nav ul {
 
 /* Project page */
 
-.content-editable {
-    line-height: 1.5rem;
-}
-
-.content-editable[contenteditable="true"]:focus {
-    outline: none;
-    /* outline: 1px solid rgb(from var(--text-dark-color) r g b / 0.8); */
+.auto-text-area {
+    background-color: transparent;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: none;
+    border: none;
 }
 
 .project-detail .project-title {

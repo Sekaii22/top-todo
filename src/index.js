@@ -2,8 +2,8 @@ import "./styles.css";
 import { renderProjectPage, renderProjectCatelogPage } from "./todo-ui";
 import { projects } from "./storage"; //DEBUG
 
-renderProjectCatelogPage(projects);
-// renderProjectPage(projects[0]);
+// renderProjectCatelogPage(projects);
+renderProjectPage(projects[0]);
 
 // TODOs:
 //  - event handlers for editing project title and desc in project page. (DONE)
@@ -15,6 +15,17 @@ renderProjectCatelogPage(projects);
 //  - event handler to sidebar navBtn (Done)
 //  - event handers for titleBtn and project delBtn in project catalog page (Done)
 //  - nav button highlight showing current page (Done)
+//  - save current page uuid in local storage, start from that page on load (Done)
+
+// const textareas = document.querySelectorAll(".auto-text-area");
 
 
+// for (let textarea of textareas) {
+//     textarea.style.height = "0";
+//     textarea.style.height = textarea.scrollHeight + "px";
 
+//     textarea.addEventListener("input", () => {
+//     textarea.style.height = "0";
+//     textarea.style.height = textarea.scrollHeight + "px";  // Set height to scrollHeight
+//     });
+// }
