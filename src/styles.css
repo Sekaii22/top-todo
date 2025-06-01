@@ -47,6 +47,7 @@ body {
     top: 0;
     bottom: 0;
     transition: width 0.25s;
+    z-index: 1;
 }
 
 #content {

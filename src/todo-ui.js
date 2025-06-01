@@ -520,6 +520,16 @@ function highlightSidebarNav(btn) {
     btn.disabled = true;
 }
 
+// resize textarea when window size changes
+addEventListener("resize", () => {
+    const textareas = document.querySelectorAll(".auto-text-area");
+
+    for (let textarea of textareas) {
+        textarea.style.height = "0";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+})
+
 renderSidebarProjectNav();
 
 export { renderProjectPage, renderProjectCatelogPage };
