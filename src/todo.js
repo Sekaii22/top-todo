@@ -61,13 +61,27 @@ class Project {
         }
     }
 
+    getIndexOfTodo(UUID) {
+        return this.todoList.findIndex((item) => item.UUID === UUID);
+    }
+
     deleteTodoItem(UUID) {
-        let index = this.todoList.findIndex((item) => item.UUID === UUID);
+        let index = getIndexOfTodo(UUID);
         if (index !== -1) {  
             return this.todoList.splice(index, 1)[0];
         }
 
         return null;
+    }
+
+    moveTodoItem(UUID, newIndex) {
+        if (newIndex > this.todoList.length) {
+            newIndex = this.todoList.length;
+        }
+
+        let oldIndex = this.getIndexOfTodo(UUID);
+        const itemToBeMoved = this.todoList.splice(oldIndex, 1)[0];
+        this.todoList.splice(newIndex, 0, itemToBeMoved);
     }
 }
 

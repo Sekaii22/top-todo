@@ -255,7 +255,15 @@ nav ul {
     background-color: var(--todo-dark-color);
     padding: 6px 10px;
     border-radius: 5px;
-    
+}
+
+.draggable {
+    cursor: move;
+}
+
+.dragging {
+    opacity: 0.5;
+    scale: 1.05;
 }
 
 .todo-item-summary {

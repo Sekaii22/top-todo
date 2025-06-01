@@ -32,6 +32,9 @@ function createTodoItem(todo, project) {
     // todo summary
     const todoItemDiv = document.createElement("div");
     todoItemDiv.classList.add("todo-item");
+    todoItemDiv.classList.add("draggable");
+    todoItemDiv.draggable = true;
+    todoItemDiv.dataset.uuid = todo.UUID;
 
     const summary = document.createElement("div");
     summary.classList.add("todo-item-summary");
@@ -164,6 +167,52 @@ function createTodoItem(todo, project) {
         saveToLocalStorage();
     });
 
+    // set item dragging event handlers
+    let startDragY = null;
+    todoItemDiv.addEventListener("dragstart", () => {
+        todoItemDiv.classList.add("dragging");
+
+        let box = todoItemDiv.getBoundingClientRect();
+        startDragY = Math.round(box.top + (box.height / 2));
+    });
+
+    todoItemDiv.addEventListener("dragend", () => {
+        todoItemDiv.classList.remove("dragging");
+
+        let box = todoItemDiv.getBoundingClientRect();
+        let endDragY = Math.round(box.top + (box.height / 2));
+        
+        if (endDragY > startDragY) {
+            // dragged down
+            const afterElement = todoItemDiv.nextElementSibling;
+
+            if (afterElement) {
+                const newIndex = project.getIndexOfTodo(afterElement.dataset.uuid) - 1;
+                project.moveTodoItem(todoItemDiv.dataset.uuid, newIndex);
+            } else {
+                // move to end of arr
+                project.moveTodoItem(todoItemDiv.dataset.uuid, project.todoList.length);
+            }
+            
+            saveToLocalStorage();
+        }
+        else if (endDragY < startDragY) {
+            // dragged up
+            const beforeElement = todoItemDiv.previousElementSibling;
+
+            if (beforeElement) {
+                const newIndex = project.getIndexOfTodo(beforeElement.dataset.uuid) + 1;
+                project.moveTodoItem(todoItemDiv.dataset.uuid, newIndex);
+            }
+            else {
+                // move to start of arr
+                project.moveTodoItem(todoItemDiv.dataset.uuid, 0);
+            }
+            
+            saveToLocalStorage();
+        }
+    });
+
     return todoItemDiv;
 }
 
@@ -206,6 +255,43 @@ function renderProjectPage(project) {
     for (let todo of project.todoList) {
         const todoItemDiv = createTodoItem(todo, project);
         todoContainer.appendChild(todoItemDiv);
+    }
+
+    // event handlers for dragging in todoContainer
+    todoContainer.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(todoContainer, e.clientY);
+        const dragging = todoContainer.querySelector(".dragging");
+        if (!dragging)
+            return;
+
+        if (afterElement === undefined) {
+            todoContainer.appendChild(dragging);
+        } 
+        else {
+            todoContainer.insertBefore(dragging, afterElement);
+        }
+    });
+
+    function getDragAfterElement(container, y) {
+        let draggableElements = [...container.querySelectorAll(".draggable:not(.dragging)")];
+
+        // get element with smallest negative offset from mouse cursor
+        const closestAfterElement = draggableElements.reduce((closest, draggable) => {
+            const box = draggable.getBoundingClientRect();
+            const offset = y - (box.top + (box.height / 2));
+            
+            // elements below cursor will have negative offset from cursor
+            // find the element that is below cursor and also closest to cursor
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: draggable};
+            }
+            else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+
+        return closestAfterElement;
     }
 
     // event handler for projectTitle
