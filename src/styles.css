@@ -286,9 +286,9 @@ nav ul {
 .todo-item-summary input[type="checkbox"]::before {
     content: "✔";
     position: absolute;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     left: 1px;
-    bottom: 0px;
+    bottom: -5px;
     visibility: hidden;
 }
 
@@ -326,6 +326,11 @@ nav ul {
 .todo-completed {
     text-decoration: line-through;
     color: gray
+}
+
+.drag-indicator {
+    display: flex;
+    align-items: center;
 }
 
 .todo-item-expanded {
