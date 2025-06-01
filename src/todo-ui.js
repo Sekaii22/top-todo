@@ -51,6 +51,10 @@ function createTodoItem(todo, project) {
     dueDateInput.type = "date";
     dueDateInput.classList.add("due-date-input");
     todoTitle.classList.add("todo-title", "auto-text-area");
+    if (todo.isComplete) {
+        todoTitle.classList.add("todo-completed");
+        dueDateInput.classList.add("todo-completed");
+    }
     expandBtn.classList.add("todo-expand-btn", "logo-btn");
 
     completeStatusCheckbox.checked = todo.isComplete
@@ -106,6 +110,8 @@ function createTodoItem(todo, project) {
     // event handlers
     completeStatusCheckbox.addEventListener("input", () => {
         todo.setCompleteStatus(completeStatusCheckbox.checked);
+        todoTitle.classList.toggle("todo-completed");
+        dueDateInput.classList.toggle("todo-completed");
         saveToLocalStorage();
     });
 
