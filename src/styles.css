@@ -343,6 +343,7 @@ nav ul {
     border: none;
     font-size: 0.9rem;
     font-family: unset;
+    min-width: 6rem;
 }
 
 .todo-title {

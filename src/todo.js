@@ -90,7 +90,9 @@ function reformTodoItem(todoItem) {
     Object.setPrototypeOf(todoItem, TodoItem.prototype);
 
     // convert properties back to correct type
-    todoItem.dueDate = new Date(todoItem.dueDate);
+    if (todoItem.dueDate) {
+        todoItem.dueDate = new Date(todoItem.dueDate);
+    }
 }
 
 function reformProject(project) {
