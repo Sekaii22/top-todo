@@ -34,7 +34,6 @@ function createTodoItem(todo, project) {
     const todoItemDiv = document.createElement("div");
     todoItemDiv.classList.add("todo-item");
     todoItemDiv.classList.add("draggable");
-    todoItemDiv.draggable = true;
     todoItemDiv.dataset.uuid = todo.UUID;
 
     const summary = document.createElement("div");
@@ -45,7 +44,7 @@ function createTodoItem(todo, project) {
     const priorityBtn = document.createElement("button");
     const dueDateInput = document.createElement("input");
     const todoTitleWrapper = createAutoTextAreaElement(["todo-title"], todo.title);
-    const todoDragIndicator = document.createElement("div");
+    const todoDragIndicator = document.createElement("button");
     const expandBtn = document.createElement("button");
     
     completeStatusCheckbox.type = "checkbox";
@@ -70,7 +69,8 @@ function createTodoItem(todo, project) {
         dueDateInput.classList.add("todo-completed");
     }
 
-    todoDragIndicator.classList.add("drag-indicator");
+    todoDragIndicator.classList.add("logo-btn", "drag-indicator");
+    todoDragIndicator.draggable = true;
     todoDragIndicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z"/></svg>`;
     
     expandBtn.classList.add("todo-expand-btn", "logo-btn");
@@ -180,14 +180,15 @@ function createTodoItem(todo, project) {
 
     // set item dragging event handlers
     let startDragY = null;
-    todoItemDiv.addEventListener("dragstart", () => {
+    todoDragIndicator.addEventListener("dragstart", (e) => {
         todoItemDiv.classList.add("dragging");
-
+        
         let box = todoItemDiv.getBoundingClientRect();
         startDragY = Math.round(box.top + (box.height / 2));
+        e.dataTransfer.setDragImage(todoItemDiv, box.width, 0);
     });
 
-    todoItemDiv.addEventListener("dragend", () => {
+    todoDragIndicator.addEventListener("dragend", () => {
         todoItemDiv.classList.remove("dragging");
 
         let box = todoItemDiv.getBoundingClientRect();
