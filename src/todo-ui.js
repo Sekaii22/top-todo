@@ -64,6 +64,7 @@ function createTodoItem(todo, project) {
 
     const todoTitleInput = todoTitleWrapper.querySelector("textarea");
     todoTitleInput.disabled = true;
+    todoTitleInput.maxLength = 150;
     if (todo.isComplete) {
         todoTitleInput.classList.add("todo-completed");
         dueDateInput.classList.add("todo-completed");
@@ -93,6 +94,7 @@ function createTodoItem(todo, project) {
     const todoDescWrapper = createAutoTextAreaElement(["todo-desc"], todo.desc);
     const todoDescInput = todoDescWrapper.querySelector("textarea");
     todoDescInput.disabled = true;
+    todoDescInput.placeholder = "Todo Description";
     div.appendChild(todoDescWrapper);
 
     const todoBtnGroupContainer = document.createElement("div");
@@ -237,13 +239,16 @@ function renderProjectPage(project) {
     const page = document.createElement("div");
     const projectDetail = document.createElement("div");
     const projectTitleWrapper = createAutoTextAreaElement(["project-title"], project.title);
+    const projectTitleInput = projectTitleWrapper.querySelector("textarea");
     const projectDescWrapper = createAutoTextAreaElement(["project-desc"], project.desc);
+    const projectDescInput = projectDescWrapper.querySelector("textarea");
     const todoContainer = document.createElement("div");
     const todoDialogOpenBtn = document.createElement("button");
 
     page.classList.add("page");
     page.dataset.uuid = project.UUID;
     projectDetail.classList.add("project-detail");
+    projectDescInput.placeholder = "Project Description";
     todoContainer.classList.add("todo-container");
     todoDialogOpenBtn.classList.add("logo-btn");
     todoDialogOpenBtn.id = "dialog-todo-open-btn";
@@ -301,7 +306,6 @@ function renderProjectPage(project) {
     }
 
     // event handler for projectTitle
-    const projectTitleInput = projectTitleWrapper.querySelector("textarea");
     projectTitleInput.addEventListener("change", () => {
         project.setTitle(projectTitleInput.value);
         saveToLocalStorage(projects);
@@ -312,7 +316,6 @@ function renderProjectPage(project) {
     });
 
     // event handler for projectDesc
-    const projectDescInput = projectDescWrapper.querySelector("textarea");
     projectDescInput.addEventListener("change", () => {
         project.setDesc(projectDescInput.value);
         saveToLocalStorage(projects);
