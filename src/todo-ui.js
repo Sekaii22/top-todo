@@ -1,4 +1,5 @@
 import { projects, saveToLocalStorage } from "./storage"; 
+import { createAutoTextAreaElement } from "./auto-text-area";
 import "./modal";
 
 const main = document.querySelector(".main");
@@ -43,40 +44,42 @@ function createTodoItem(todo, project) {
     const completeStatusCheckbox = document.createElement("input");
     const priorityBtn = document.createElement("button");
     const dueDateInput = document.createElement("input");
-    const todoTitle = document.createElement("textarea");
+    const todoTitleWrapper = createAutoTextAreaElement(["todo-title"], todo.title);
     const todoDragIndicator = document.createElement("div");
     const expandBtn = document.createElement("button");
     
     completeStatusCheckbox.type = "checkbox";
-    priorityBtn.classList.add("priority-btn", "logo-btn");
-    dueDateInput.type = "date";
-    dueDateInput.classList.add("due-date-input");
-    todoTitle.classList.add("todo-title", "auto-text-area");
-    if (todo.isComplete) {
-        todoTitle.classList.add("todo-completed");
-        dueDateInput.classList.add("todo-completed");
-    }
-    todoDragIndicator.classList.add("drag-indicator");
-    expandBtn.classList.add("todo-expand-btn", "logo-btn");
-
     completeStatusCheckbox.checked = todo.isComplete
+    
+    priorityBtn.classList.add("priority-btn", "logo-btn");
     let priorityClass = getPriorityClassString(todo.priority);
     priorityBtn.title = "Priority";
     priorityBtn.innerHTML = `<svg class="${priorityClass} priority-svg" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M477-80q-83 0-156-31.5T194-197q-54-54-85.5-127T77-480q0-83 31.5-156T194-763q54-54 127-85.5T477-880q83 0 156 31.5T760-763q54 54 85.5 127T877-480q0 83-31.5 156T760-197q-54 54-127 85.5T477-80Zm91-93q78-23 135.5-80.5T784-389L568-173ZM171-574l212-212q-77 23-133 79t-79 133Zm-4 176 392-391q-12-3-24-5t-25-4L159-447q2 13 3.5 25t4.5 24Zm57 114 449-450q-8-6-16.5-12T639-757L200-318q5 9 11 17.5t13 16.5Zm91 81 438-439q-5-9-11-17.5T730-676L281-226q8 6 16.5 12t17.5 11Zm129 41 351-351q-2-13-4-25t-5-24L395-171q12 3 24 5t25 4Z"/></svg>`;
+    
+    dueDateInput.classList.add("due-date-input");
+    dueDateInput.type = "date";
     if (todo.dueDate) {
         dueDateInput.valueAsDate = todo.dueDate;
     }
     dueDateInput.disabled = true;
-    todoTitle.disabled = true;
-    todoTitle.spellcheck = false;
-    todoTitle.value = todo.title;
+
+    const todoTitleInput = todoTitleWrapper.querySelector("textarea");
+    todoTitleInput.disabled = true;
+    if (todo.isComplete) {
+        todoTitleInput.classList.add("todo-completed");
+        dueDateInput.classList.add("todo-completed");
+    }
+
+    todoDragIndicator.classList.add("drag-indicator");
     todoDragIndicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z"/></svg>`;
+    
+    expandBtn.classList.add("todo-expand-btn", "logo-btn");
     expandBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>`;
     
     summary.appendChild(completeStatusCheckbox);
     summary.appendChild(priorityBtn);
     summary.appendChild(dueDateInput);
-    summary.appendChild(todoTitle);
+    summary.appendChild(todoTitleWrapper);
     summary.appendChild(todoDragIndicator);
     summary.appendChild(expandBtn);
 
@@ -87,12 +90,10 @@ function createTodoItem(todo, project) {
     todoItemDiv.appendChild(expanded);
     expanded.appendChild(div);
 
-    const todoDesc = document.createElement("textarea");
-    todoDesc.classList.add("todo-desc", "auto-text-area")
-    todoDesc.disabled = true;
-    todoDesc.spellcheck = false;
-    todoDesc.value = todo.desc;
-    div.appendChild(todoDesc);
+    const todoDescWrapper = createAutoTextAreaElement(["todo-desc"], todo.desc);
+    const todoDescInput = todoDescWrapper.querySelector("textarea");
+    todoDescInput.disabled = true;
+    div.appendChild(todoDescWrapper);
 
     const todoBtnGroupContainer = document.createElement("div");
     todoBtnGroupContainer.classList.add("todo-btn-group-container");
@@ -114,7 +115,7 @@ function createTodoItem(todo, project) {
     // event handlers
     completeStatusCheckbox.addEventListener("input", () => {
         todo.setCompleteStatus(completeStatusCheckbox.checked);
-        todoTitle.classList.toggle("todo-completed");
+        todoTitleInput.classList.toggle("todo-completed");
         dueDateInput.classList.toggle("todo-completed");
         saveToLocalStorage();
     });
@@ -131,13 +132,13 @@ function createTodoItem(todo, project) {
     const editSvg = todoEditBtn.firstElementChild;
     const setEditing = function(bool) {
         if (bool) {
-            todoTitle.disabled = false;
-            todoDesc.disabled = false;
+            todoTitleInput.disabled = false;
+            todoDescInput.disabled = false;
             dueDateInput.disabled = false;
             editSvg.classList.add("fill-green");
         } else {
-            todoTitle.disabled = true;
-            todoDesc.disabled = true;
+            todoTitleInput.disabled = true;
+            todoDescInput.disabled = true;
             dueDateInput.disabled = true;
             editSvg.classList.remove("fill-green");
         }
@@ -158,13 +159,13 @@ function createTodoItem(todo, project) {
         saveToLocalStorage();
     });
 
-    todoTitle.addEventListener("change", () => {
-        todo.setTitle(todoTitle.value);
+    todoTitleInput.addEventListener("change", () => {
+        todo.setTitle(todoTitleInput.value);
         saveToLocalStorage();
     });
 
-    todoDesc.addEventListener("change", () => {
-        todo.setDesc(todoDesc.value);
+    todoDescInput.addEventListener("change", () => {
+        todo.setDesc(todoDescInput.value);
         saveToLocalStorage();
     });
 
@@ -234,20 +235,14 @@ function renderProjectPage(project) {
     
     const page = document.createElement("div");
     const projectDetail = document.createElement("div");
-    const projectTitle = document.createElement("textarea");
-    const projectDesc = document.createElement("textarea");
+    const projectTitleWrapper = createAutoTextAreaElement(["project-title"], project.title);
+    const projectDescWrapper = createAutoTextAreaElement(["project-desc"], project.desc);
     const todoContainer = document.createElement("div");
     const todoDialogOpenBtn = document.createElement("button");
 
     page.classList.add("page");
     page.dataset.uuid = project.UUID;
     projectDetail.classList.add("project-detail");
-    projectTitle.classList.add("project-title", "auto-text-area");
-    projectTitle.spellcheck = false;
-    projectTitle.value = project.title;
-    projectDesc.classList.add("project-desc", "auto-text-area");
-    projectDesc.spellcheck = false;
-    projectDesc.value = project.desc;
     todoContainer.classList.add("todo-container");
     todoDialogOpenBtn.classList.add("logo-btn");
     todoDialogOpenBtn.id = "dialog-todo-open-btn";
@@ -258,8 +253,8 @@ function renderProjectPage(project) {
     page.appendChild(projectDetail);
     page.appendChild(todoContainer);
     page.appendChild(todoDialogOpenBtn);
-    projectDetail.appendChild(projectTitle);
-    projectDetail.appendChild(projectDesc);
+    projectDetail.appendChild(projectTitleWrapper);
+    projectDetail.appendChild(projectDescWrapper);
 
     // create todo items
     for (let todo of project.todoList) {
@@ -305,8 +300,9 @@ function renderProjectPage(project) {
     }
 
     // event handler for projectTitle
-    projectTitle.addEventListener("change", () => {
-        project.setTitle(projectTitle.value);
+    const projectTitleInput = projectTitleWrapper.querySelector("textarea");
+    projectTitleInput.addEventListener("change", () => {
+        project.setTitle(projectTitleInput.value);
         saveToLocalStorage();
 
         // change nav btn title also
@@ -315,8 +311,9 @@ function renderProjectPage(project) {
     });
 
     // event handler for projectDesc
-    projectDesc.addEventListener("change", () => {
-        project.setDesc(projectDesc.value);
+    const projectDescInput = projectDescWrapper.querySelector("textarea");
+    projectDescInput.addEventListener("change", () => {
+        project.setDesc(projectDescInput.value);
         saveToLocalStorage();
     });
 
@@ -335,7 +332,6 @@ function renderProjectPage(project) {
         // add to new todo to DOM
         const newTodoItem = createTodoItem(newTodo, project);
         todoContainer.appendChild(newTodoItem);
-        initializeAutoTextAreas(newTodoItem.querySelectorAll(".auto-text-area"));
     };
     todoDialog.addEventListener("newTodoSubmit", newTodoSubmitHandler);
 
@@ -347,24 +343,6 @@ function renderProjectPage(project) {
         main.removeEventListener("pageDelete", pageDeleteHandler);
     };
     main.addEventListener("pageDelete", pageDeleteHandler);
-
-    // event handler for all auto text area
-    let textareas = page.querySelectorAll(".auto-text-area");
-    initializeAutoTextAreas(textareas);
-
-}
-
-function initializeAutoTextAreas(textareas) {
-    for (let textarea of textareas) {
-        // initialize height to fit current content
-        textarea.style.height = "0";
-        textarea.style.height = textarea.scrollHeight + "px";
-
-        textarea.addEventListener("input", () => {
-            textarea.style.height = "0";
-            textarea.style.height = textarea.scrollHeight + "px";
-        });
-    }
 }
 
 /* Project Catelog */
@@ -521,14 +499,14 @@ function highlightSidebarNav(btn) {
 }
 
 // resize textarea when window size changes
-addEventListener("resize", () => {
-    const textareas = document.querySelectorAll(".auto-text-area");
+// addEventListener("resize", () => {
+//     const textareas = document.querySelectorAll(".auto-text-area");
 
-    for (let textarea of textareas) {
-        textarea.style.height = "0";
-        textarea.style.height = textarea.scrollHeight + "px";
-    }
-})
+//     for (let textarea of textareas) {
+//         textarea.style.height = "0";
+//         textarea.style.height = textarea.scrollHeight + "px";
+//     }
+// })
 
 renderSidebarProjectNav();
 

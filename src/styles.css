@@ -52,7 +52,7 @@ body {
 
 #content {
     min-height: 100vh;
-    min-width: 320px;
+    min-width: 420px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -221,23 +221,44 @@ nav ul {
 /* Project page */
 
 .auto-text-area {
-    background-color: transparent;
-    display: block;
-    width: 100%;
-    overflow: hidden;
+    display: grid;
+}
+
+.auto-text-area::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    visibility: hidden;
+}
+
+.auto-text-area > textarea {
     resize: none;
+    overflow: hidden;
+    background-color: transparent;
     border: none;
 }
 
-.project-detail .project-title {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    padding: 10px 0;
+.auto-text-area > textarea,
+.auto-text-area::after {
+    grid-row: 1;
+    grid-column: 1;
+    font: inherit;
+    word-break: break-word;
 }
 
-.project-detail .project-desc {
+.project-detail .project-title {
+    margin-bottom: 10px;
+}
+
+.project-detail .project-title > textarea,
+.project-detail .project-title::after {
+    font-size: 2rem;
+    padding: 0.5rem;
+}
+
+.project-detail .project-desc > textarea,
+.project-detail .project-desc::after {
     font-size: 1.2rem;
-    padding: 10px 0;
+    padding: 0.5rem;
 }
 
 .project-detail {
@@ -250,6 +271,7 @@ nav ul {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    margin-bottom: 100px;
 }
 
 .todo-item {

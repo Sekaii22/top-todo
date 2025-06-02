@@ -66,7 +66,7 @@ class Project {
     }
 
     deleteTodoItem(UUID) {
-        let index = getIndexOfTodo(UUID);
+        let index = this.getIndexOfTodo(UUID);
         if (index !== -1) {  
             return this.todoList.splice(index, 1)[0];
         }
