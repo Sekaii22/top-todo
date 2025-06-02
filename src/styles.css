@@ -202,6 +202,9 @@ nav ul {
     cursor: pointer;
     font-size: 1.2rem;
     border-bottom: 1px solid var(--text-dark-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .project-title-btn:hover {

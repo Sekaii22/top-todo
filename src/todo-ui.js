@@ -117,13 +117,13 @@ function createTodoItem(todo, project) {
         todo.setCompleteStatus(completeStatusCheckbox.checked);
         todoTitleInput.classList.toggle("todo-completed");
         dueDateInput.classList.toggle("todo-completed");
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     const prioritySvg = priorityBtn.firstElementChild;
     priorityBtn.addEventListener("click", () => {
         todo.setPriority(todo.priority + 1);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
         priorityClass = getPriorityClassString(todo.priority);
         prioritySvg.setAttribute("class", `${priorityClass} priority-svg`);
     });
@@ -156,17 +156,17 @@ function createTodoItem(todo, project) {
 
     dueDateInput.addEventListener("input", () => {
         todo.setDueDate(new Date(dueDateInput.value));
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     todoTitleInput.addEventListener("change", () => {
         todo.setTitle(todoTitleInput.value);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     todoDescInput.addEventListener("change", () => {
         todo.setDesc(todoDescInput.value);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     todoDelBtn.addEventListener("click", () => {
@@ -175,7 +175,7 @@ function createTodoItem(todo, project) {
 
         // remove from project
         project.deleteTodoItem(todo.UUID);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     // set item dragging event handlers
@@ -205,7 +205,7 @@ function createTodoItem(todo, project) {
                 project.moveTodoItem(todoItemDiv.dataset.uuid, project.todoList.length);
             }
             
-            saveToLocalStorage();
+            saveToLocalStorage(projects);
         }
         else if (endDragY < startDragY) {
             // dragged up
@@ -220,7 +220,7 @@ function createTodoItem(todo, project) {
                 project.moveTodoItem(todoItemDiv.dataset.uuid, 0);
             }
             
-            saveToLocalStorage();
+            saveToLocalStorage(projects);
         }
     });
 
@@ -303,7 +303,7 @@ function renderProjectPage(project) {
     const projectTitleInput = projectTitleWrapper.querySelector("textarea");
     projectTitleInput.addEventListener("change", () => {
         project.setTitle(projectTitleInput.value);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
 
         // change nav btn title also
         const navBtn = document.querySelector(`button[data-uuid="${project.UUID}"]`);
@@ -314,7 +314,7 @@ function renderProjectPage(project) {
     const projectDescInput = projectDescWrapper.querySelector("textarea");
     projectDescInput.addEventListener("change", () => {
         project.setDesc(projectDescInput.value);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     });
 
     // event handler for new todo btn
@@ -327,7 +327,7 @@ function renderProjectPage(project) {
 
         // save new todo
         project.addTodoItem(newTodo);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
 
         // add to new todo to DOM
         const newTodoItem = createTodoItem(newTodo, project);
@@ -387,7 +387,7 @@ function createProjectItem(project) {
             if (index !== -1) {
                 projects.splice(index, 1);
             }
-            saveToLocalStorage();
+            saveToLocalStorage(projects);
         }
     });
 
@@ -471,7 +471,7 @@ function renderSidebarProjectNav() {
 
         // save new proj
         projects.push(newProj);
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
 
         // add new project to sidebar as a nav
         const li = createProjectNavBtn(newProj);

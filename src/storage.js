@@ -1,14 +1,15 @@
-import { reformProject } from "./todo";
+import { reformProject, Project } from "./todo";
 
-function saveToLocalStorage() {
-    localStorage.setItem("projects", JSON.stringify(projects));
+function saveToLocalStorage(value, key="projects") {
+    localStorage.setItem(key, JSON.stringify(value));
 }
 
-function getFromLocalStorage() {
+function getProjsFromLocalStorage() {
     let projects = localStorage.getItem("projects");
+
     if (projects === null) {
         projects = [new Project("Default", "Default project.")];
-        saveToLocalStorage();
+        saveToLocalStorage(projects);
     }
     else {
         projects = JSON.parse(projects);
@@ -21,6 +22,6 @@ function getFromLocalStorage() {
     return projects;
 }
 
-const projects = getFromLocalStorage();
+const projects = getProjsFromLocalStorage();
 
-export { projects, saveToLocalStorage, getFromLocalStorage };
+export { projects, saveToLocalStorage, getProjsFromLocalStorage };
