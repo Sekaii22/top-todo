@@ -454,6 +454,10 @@ dialog::backdrop {
     border-radius: 5px;
 }
 
+option {
+    color: black;
+}
+
 .dialog-area textarea {
     height: 10rem;
     resize: none;
