@@ -1,11 +1,25 @@
-import { reformProject, Project } from "./todo";
+import { reformProject, Project, TodoItem } from "./todo";
 
 function saveToLocalStorage(value, key="projects") {
     localStorage.setItem(key, JSON.stringify(value));
 }
 
-// store last visited page
-// store whether sidebar was in closed or opened state
+// get last visited page's uuid
+function getLastOpenPage() {
+    let pageUUID = localStorage.getItem("lastPageOpened");
+
+    if (pageUUID === null) {
+        pageUUID = "default";
+        saveToLocalStorage(pageUUID, "lastPageOpened");
+    } 
+    else {
+        pageUUID = JSON.parse(pageUUID);
+    }
+    
+    return pageUUID;
+}
+
+// get whether sidebar was in closed or opened state
 function getSidebarIsOpen() {
     let isOpen = localStorage.getItem("sidebarOpen");
 
@@ -24,7 +38,10 @@ function getProjsFromLocalStorage() {
     let projects = localStorage.getItem("projects");
 
     if (projects === null) {
-        projects = [new Project("Default", "Default project.")];
+        const defaultProj = new Project("Default Project", "Project Description");
+        defaultProj.addTodoItem(new TodoItem("Example Todo", "Todo description can be added here."));
+        projects = [defaultProj];
+        
         saveToLocalStorage(projects);
     }
     else {
@@ -39,6 +56,7 @@ function getProjsFromLocalStorage() {
 }
 
 const projects = getProjsFromLocalStorage();
-let isSidebarOpen = getSidebarIsOpen();
+let isSidebarOpen = { bool: getSidebarIsOpen() };
+let lastOpenedPage = { string: getLastOpenPage() };
 
-export { projects, saveToLocalStorage, isSidebarOpen };
+export { projects, saveToLocalStorage, isSidebarOpen, lastOpenedPage };

@@ -104,7 +104,7 @@ function reformProject(project) {
         reformTodoItem(item);
     }
 
-    console.log(project);
+    // console.log(project);
 }
 
 function getProjectFromUUID(projectList, uuid) {

@@ -1,4 +1,4 @@
-import { projects, saveToLocalStorage, isSidebarOpen } from "./storage"; 
+import { projects, saveToLocalStorage, isSidebarOpen, lastOpenedPage } from "./storage"; 
 import { createAutoTextAreaElement } from "./auto-text-area";
 import "./modal";
 
@@ -232,6 +232,7 @@ function createTodoItem(todo, project) {
 
 function renderProjectPage(project) {
     delCurrContent();
+    saveToLocalStorage(project.UUID, "lastPageOpened");
 
     const navBtn = document.querySelector(`button[data-uuid="${project.UUID}"]`);
     highlightSidebarNav(navBtn)
@@ -400,6 +401,7 @@ function createProjectItem(project) {
 
 function renderProjectCatelogPage(projectList) {
     delCurrContent();
+    saveToLocalStorage("default", "lastPageOpened");
 
     const projectCatalogNavBtn = document.querySelector("#project-catalog-btn");
     highlightSidebarNav(projectCatalogNavBtn);
@@ -452,7 +454,7 @@ function renderSidebarProjectNav() {
     const content = document.querySelector("#content");
     const sidebar = document.querySelector("#sidebar");
 
-    if (!isSidebarOpen) {
+    if (!isSidebarOpen.bool) {
         sidebar.classList.toggle("collapse-sidebar");
         content.classList.toggle("expand-content");
     }
@@ -467,7 +469,8 @@ function renderSidebarProjectNav() {
     sidebarBtn.addEventListener("click", () => {
         sidebar.classList.toggle("collapse-sidebar");
         content.classList.toggle("expand-content");
-        saveToLocalStorage(!isSidebarOpen, "sidebarOpen")
+        isSidebarOpen.bool = !isSidebarOpen.bool
+        saveToLocalStorage(isSidebarOpen.bool, "sidebarOpen")
     });
 
     // event handler for new project btn
@@ -508,16 +511,22 @@ function highlightSidebarNav(btn) {
     btn.disabled = true;
 }
 
-// resize textarea when window size changes
-// addEventListener("resize", () => {
-//     const textareas = document.querySelectorAll(".auto-text-area");
+function startUI() {
+    renderSidebarProjectNav();
 
-//     for (let textarea of textareas) {
-//         textarea.style.height = "0";
-//         textarea.style.height = textarea.scrollHeight + "px";
-//     }
-// })
+    if (lastOpenedPage.string === "default") {
+        renderProjectCatelogPage(projects);
+    } 
+    else {
+        let index = projects.findIndex((item) => item.UUID === lastOpenedPage.string);
 
-renderSidebarProjectNav();
+        if (index === -1) {
+            renderProjectCatelogPage(projects);
+        }
+        
+        renderProjectPage(projects[index]);
+    }
+}
 
-export { renderProjectPage, renderProjectCatelogPage };
+
+export { renderProjectPage, renderProjectCatelogPage, startUI };
