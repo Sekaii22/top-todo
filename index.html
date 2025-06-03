@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+<script defer src="main.js"></script></head>
+<body>
+    <!-- Modals -->
+    <dialog id="new-project-dialog">
+        <div class="dialog-area">
+            <form>
+                <table>
+                    <caption>New Project</caption>
+                    <tr>
+                        <th><label for="dialog-project-title-input">Title:</label></th>
+                        <td><input id="dialog-project-title-input" type="text" placeholder="Project title" maxlength="150" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="dialog-project-desc-input">Description:</label></th>
+                        <td><textarea id="dialog-project-desc-input" placeholder="Project description"></textarea></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td><button class="dialog-confirm-btn">Confirm</button></td>
+                    </tr>
+                </table>
+            </form>
+            <button class="dialog-close-btn logo-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+        </div>
+    </dialog>
+
+    <dialog id="new-todo-dialog">
+        <div class="dialog-area">
+            <form>
+                <table>
+                    <caption>New Todo</caption>
+                    <tr>
+                        <th><label for="dialog-todo-title-input">Title:</label></th>
+                        <td><input id="dialog-todo-title-input" type="text" placeholder="Todo title" maxlength="150" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="dialog-todo-desc-input">Description:</label></th>
+                        <td><textarea id="dialog-todo-desc-input" placeholder="Todo description"></textarea></td>
+                    </tr>
+                    <tr>
+                        <th><label for="dialog-todo-priority-input">Priority:</label></th>
+                        <td>
+                            <select id="dialog-todo-priority-input">
+                                <option value="0" selected>Low</option>
+                                <option value="1">Medium</option>
+                                <option value="2">High</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="dialog-todo-due-date-input">Due Date:</label></th>
+                        <td><input type="date" id="dialog-todo-due-date-input"></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td><button class="dialog-confirm-btn">Confirm</button></td>
+                    </tr>
+                </table>
+            </form>
+            <button class="dialog-close-btn logo-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+        </div>
+    </dialog>
+    
+    <section id="sidebar">
+        <header>Todo.</header>
+        <nav>
+            <ul>
+                <li>
+                    <button id="dialog-project-open-btn" class="function-btn main-nav-btn center-logo-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+                        Add new project
+                    </button>
+                </li>
+                <li>
+                    <button id="project-catalog-btn" class="nav-btn main-nav-btn center-logo-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-520v-320h320v320H120Zm0 400v-320h320v320H120Zm400-400v-320h320v320H520Zm0 400v-320h320v320H520ZM200-600h160v-160H200v160Zm400 0h160v-160H600v160Zm0 400h160v-160H600v160Zm-400 0h160v-160H200v160Zm400-400Zm0 240Zm-240 0Zm0-240Z"/></svg> 
+                        Projects
+                    </button>
+                </li>
+                <div class="project-group">
+                </div>
+            </ul>
+        </nav>
+    </section>
+
+    <section id="content">
+        <div class="content-header">
+            <button class="logo-btn sidebar-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-80v-560H200v560h120Zm80 0h360v-560H400v560Zm-80 0H200h120Z"/></svg>
+            </button>
+        </div>
+
+        <div class="main"></div>
+    </section>
+</body>
+</html>
