@@ -6,6 +6,19 @@ function saveToLocalStorage(value, key="projects") {
 
 // store last visited page
 // store whether sidebar was in closed or opened state
+function getSidebarIsOpen() {
+    let isOpen = localStorage.getItem("sidebarOpen");
+
+    if (isOpen === null) {
+        isOpen = true;
+        saveToLocalStorage(isOpen, "sidebarOpen");
+    }
+    else {
+        isOpen = JSON.parse(isOpen);
+    }
+
+    return isOpen;
+}
 
 function getProjsFromLocalStorage() {
     let projects = localStorage.getItem("projects");
@@ -26,5 +39,6 @@ function getProjsFromLocalStorage() {
 }
 
 const projects = getProjsFromLocalStorage();
+let isSidebarOpen = getSidebarIsOpen();
 
-export { projects, saveToLocalStorage, getProjsFromLocalStorage };
+export { projects, saveToLocalStorage, isSidebarOpen };

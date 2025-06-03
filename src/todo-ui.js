@@ -1,4 +1,4 @@
-import { projects, saveToLocalStorage } from "./storage"; 
+import { projects, saveToLocalStorage, isSidebarOpen } from "./storage"; 
 import { createAutoTextAreaElement } from "./auto-text-area";
 import "./modal";
 
@@ -452,6 +452,11 @@ function renderSidebarProjectNav() {
     const content = document.querySelector("#content");
     const sidebar = document.querySelector("#sidebar");
 
+    if (!isSidebarOpen) {
+        sidebar.classList.toggle("collapse-sidebar");
+        content.classList.toggle("expand-content");
+    }
+
     // add proj nav buttons to sidebar
     for (let proj of projects) {
         const li = createProjectNavBtn(proj);
@@ -462,6 +467,7 @@ function renderSidebarProjectNav() {
     sidebarBtn.addEventListener("click", () => {
         sidebar.classList.toggle("collapse-sidebar");
         content.classList.toggle("expand-content");
+        saveToLocalStorage(!isSidebarOpen, "sidebarOpen")
     });
 
     // event handler for new project btn
